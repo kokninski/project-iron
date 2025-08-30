@@ -23,57 +23,99 @@ let current = 0;
 <div class="card card-hover max-w-2xl mx-auto p-0 overflow-hidden">
   <!-- Image carousel -->
   <div class="relative w-full h-64 bg-steel flex items-center justify-center">
-    <button id="carousel-prev" class="absolute left-2 top-1/2 -translate-y-1/2 bg-offwhite/80 rounded-full p-2 focus-ring z-10" aria-label="Poprzednie zdjęcie">
-      <svg class="w-6 h-6 text-accent" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7"/></svg>
+    <button
+      id="carousel-prev"
+      class="absolute left-2 top-1/2 -translate-y-1/2 bg-offwhite/80 rounded-full p-2 focus-ring z-10"
+      aria-label="Poprzednie zdjęcie"
+    >
+      <svg
+        class="w-6 h-6 text-accent"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="2"
+        viewBox="0 0 24 24"
+        ><path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7"></path></svg
+      >
     </button>
-    <img id="carousel-image" src={images[0]?.src} alt={images[0]?.alt || title} class="object-cover w-full h-64 rounded-t-xl transition-all duration-300" loading="lazy" />
-    <button id="carousel-next" class="absolute right-2 top-1/2 -translate-y-1/2 bg-offwhite/80 rounded-full p-2 focus-ring z-10" aria-label="Następne zdjęcie">
-      <svg class="w-6 h-6 text-accent" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7"/></svg>
+    <img
+      id="carousel-image"
+      src={images[0]?.src}
+      alt={images[0]?.alt || title}
+      class="object-cover w-full h-64 rounded-t-xl transition-all duration-300"
+      loading="lazy"
+    />
+    <button
+      id="carousel-next"
+      class="absolute right-2 top-1/2 -translate-y-1/2 bg-offwhite/80 rounded-full p-2 focus-ring z-10"
+      aria-label="Następne zdjęcie"
+    >
+      <svg
+        class="w-6 h-6 text-accent"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="2"
+        viewBox="0 0 24 24"
+        ><path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7"></path></svg
+      >
     </button>
     <div id="carousel-dots" class="absolute bottom-2 left-1/2 -translate-x-1/2 flex gap-1">
-      {images.map((_, i) => (
-        <span class={`w-2 h-2 rounded-full ${i === 0 ? 'bg-accent' : 'bg-offwhite/60'}`}></span>
-      ))}
+      {
+        images.map((_, i) => (
+          <span class={`w-2 h-2 rounded-full ${i === 0 ? 'bg-accent' : 'bg-offwhite/60'}`} />
+        ))
+      }
     </div>
   </div>
-<script type="module">
-  const images = {JSON.stringify(images)};
-  let current = 0;
-  const imgEl = document.getElementById('carousel-image');
-  const prevBtn = document.getElementById('carousel-prev');
-  const nextBtn = document.getElementById('carousel-next');
-  const dots = document.getElementById('carousel-dots')?.children;
+  <script type="module">
+    const images = JSON.parse('{JSON.stringify(images)}');
+    let current = 0;
+    const imgEl = document.getElementById('carousel-image');
+    const prevBtn = document.getElementById('carousel-prev');
+    const nextBtn = document.getElementById('carousel-next');
+    const dots = document.getElementById('carousel-dots')?.children;
 
-  function updateCarousel() {
-    if (!imgEl) return;
-    imgEl.src = images[current]?.src;
-    imgEl.alt = images[current]?.alt || '';
-    if (dots) {
-      for (let i = 0; i < dots.length; i++) {
-        dots[i].className = `w-2 h-2 rounded-full ${i === current ? 'bg-accent' : 'bg-offwhite/60'}`;
+    function updateCarousel() {
+      if (!imgEl) return;
+      imgEl.src = images[current]?.src;
+      imgEl.alt = images[current]?.alt || '';
+      if (dots) {
+        for (let i = 0; i < dots.length; i++) {
+          dots[i].className =
+            `w-2 h-2 rounded-full ${i === current ? 'bg-accent' : 'bg-offwhite/60'}`;
+        }
       }
     }
-  }
-  prevBtn?.addEventListener('click', () => {
-    current = (current - 1 + images.length) % images.length;
-    updateCarousel();
-  });
-  nextBtn?.addEventListener('click', () => {
-    current = (current + 1) % images.length;
-    updateCarousel();
-  });
-</script>
+    prevBtn?.addEventListener('click', () => {
+      current = (current - 1 + images.length) % images.length;
+      updateCarousel();
+    });
+    nextBtn?.addEventListener('click', () => {
+      current = (current + 1) % images.length;
+      updateCarousel();
+    });
+  </script>
   <div class="p-6">
     <h3 class="text-heading text-2xl font-bold mb-4">{title}</h3>
     <div class="flex flex-wrap gap-2 mb-4">
-      {specs.map(({ label, value }) => (
-        <span class="chip chip-accent">{label}{value ? `: ${value}` : ''}</span>
-      ))}
+      {
+        specs.map(({ label, value }) => (
+          <span class="chip chip-accent">
+            {label}
+            {value ? `: ${value}` : ''}
+          </span>
+        ))
+      }
     </div>
-    {testimonial && (
-      <blockquote class="italic text-steel mb-2">“{testimonial.quote}”
-        <footer class="text-sm text-accent font-semibold mt-2">— {testimonial.author}{testimonial.role && <span class="text-steel font-normal">, {testimonial.role}</span>}</footer>
-      </blockquote>
-    )}
+    {
+      testimonial && (
+        <blockquote class="italic text-steel mb-2">
+          “{testimonial.quote}”
+          <footer class="text-sm text-accent font-semibold mt-2">
+            — {testimonial.author}
+            {testimonial.role && <span class="text-steel font-normal">, {testimonial.role}</span>}
+          </footer>
+        </blockquote>
+      )
+    }
   </div>
 </div>

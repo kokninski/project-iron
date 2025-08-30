@@ -8,7 +8,7 @@ const { tags = [], activeTag = 'all' } = Astro.props;
     >Wszystkie</button
   >
   {
-    tags.map((tag) => (
+    tags.map((tag: string) => (
       <button class="btn btn-secondary px-4 py-2" data-tag={tag} aria-pressed={activeTag === tag}>
         {tag}
       </button>

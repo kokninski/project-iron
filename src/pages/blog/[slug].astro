@@ -11,11 +11,20 @@ export async function getStaticPaths() {
 }
 
 const { slug } = Astro.params;
-const post = await getEntryBySlug('posts', slug);
+// If you have a Post type, import it from your content config, e.g.:
+// import type { CollectionEntry } from 'astro:content';
+// type Post = CollectionEntry<'posts'>;
+// Import the type for posts
+import type { CollectionEntry } from 'astro:content';
+type Post = CollectionEntry<'posts'>;
+
+// @ts-expect-error: TypeScript may not recognize 'posts' as a valid collection, but it is defined in content config.
+const post = (await getEntryBySlug('posts' as any, slug) as unknown) as Post;
 if (!post) throw new Error('Post not found');
 
 // Sort all posts by date descending for prev/next
-const allPosts = (await getCollection('posts')).sort((a, b) => b.data.date.getTime() - a.data.date.getTime());
+const allPosts = (await getCollection('posts')) as Post[];
+allPosts.sort((a, b) => b.data.date.getTime() - a.data.date.getTime());
 const idx = allPosts.findIndex(p => p.slug === slug);
 const prev = idx > 0 ? allPosts[idx - 1] : null;
 const next = idx < allPosts.length - 1 ? allPosts[idx + 1] : null;
