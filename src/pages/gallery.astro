@@ -27,7 +27,7 @@ const allTags = Array.from(new Set(allImages.flatMap((img) => img.tags))).sort()
   <main class="container mx-auto py-16">
     <h1 class="text-heading text-4xl font-bold mb-8">Galeria</h1>
     <GalleryFilterIsland tags={allTags} />
-    <div class="masonry-gallery" style="column-count:1; column-gap:1.5rem;">
+    <div class="masonry-gallery" style="column-count:5; column-gap:1.5rem;">
       <style>
         @media (min-width: 640px) {
           .masonry-gallery {
