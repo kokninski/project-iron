@@ -1,0 +1,17 @@
+---
+import Layout from '../layouts/Layout.astro';
+
+// Example: Replace with your actual authentication check
+const isLoggedIn = Astro.cookies.get('auth') === 'true';
+
+if (!isLoggedIn) {
+  return Astro.redirect('/login');
+}
+---
+
+<Layout>
+  <h1>Private Pag
+    
+     e</h1>
+  <p>This page is only available to logged-in users.</p>
+</Layout>
