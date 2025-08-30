@@ -1,0 +1,210 @@
+---
+// TypeScript interface for SEO props
+export interface SEOProps {
+  title?: string;
+  description?: string;
+  ogImage?: string;
+  ogImageAlt?: string;
+  canonical?: string;
+  noindex?: boolean;
+  type?: 'website' | 'article' | 'product';
+  locale?: string;
+  siteName?: string;
+  author?: string;
+  publishedTime?: string;
+  modifiedTime?: string;
+}
+
+// Import fonts from Fontsource
+import '@fontsource/inter/400.css';
+import '@fontsource/inter/500.css';
+import '@fontsource/inter/600.css';
+import '@fontsource/inter/700.css';
+import '@fontsource/oswald/400.css';
+import '@fontsource/oswald/500.css';
+import '@fontsource/oswald/600.css';
+import '@fontsource/oswald/700.css';
+
+// Import Tailwind CSS
+import '../styles/tailwind.css';
+
+// Props for the layout
+interface Props {
+  seo?: SEOProps;
+  bodyClass?: string;
+}
+
+const { seo = {}, bodyClass = '' } = Astro.props;
+
+// Default SEO values
+const {
+  title = 'Project Iron',
+  description = 'Nowoczesna aplikacja zbudowana w Astro z Tailwind CSS',
+  ogImage = '/og-default.jpg',
+  ogImageAlt = 'Project Iron - Nowoczesna aplikacja',
+  canonical = Astro.url.href,
+  noindex = false,
+  type = 'website',
+  locale = 'pl_PL',
+  siteName = 'Project Iron',
+  author = 'Project Iron Team',
+  publishedTime,
+  modifiedTime,
+} = seo;
+
+// Get current URL for canonical and OG URL
+const currentUrl = new URL(Astro.url.pathname, Astro.site);
+const canonicalUrl = canonical || currentUrl.href;
+---
+
+<!doctype html>
+<html lang="pl">
+  <head>
+    <!-- Basic Meta Tags -->
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="generator" content={Astro.generator} />
+
+    <!-- SEO Meta Tags -->
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    <meta name="author" content={author} />
+    <link rel="canonical" href={canonicalUrl} />
+
+    {noindex && <meta name="robots" content="noindex, nofollow" />}
+
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content={type} />
+    <meta property="og:url" content={canonicalUrl} />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:image" content={new URL(ogImage, Astro.site)} />
+    <meta property="og:image:alt" content={ogImageAlt} />
+    <meta property="og:locale" content={locale} />
+    <meta property="og:site_name" content={siteName} />
+
+    {publishedTime && <meta property="article:published_time" content={publishedTime} />}
+    {modifiedTime && <meta property="article:modified_time" content={modifiedTime} />}
+
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:url" content={canonicalUrl} />
+    <meta name="twitter:title" content={title} />
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content={new URL(ogImage, Astro.site)} />
+    <meta name="twitter:image:alt" content={ogImageAlt} />
+
+    <!-- Additional Meta Tags -->
+    <meta name="theme-color" content="#D35400" />
+    <meta name="msapplication-TileColor" content="#D35400" />
+
+    <!-- Icons -->
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png" />
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png" />
+    <link rel="manifest" href="/site.webmanifest" />
+
+    <!-- Preload critical resources -->
+    <!-- Font preloads removed: handled by Fontsource npm imports -->
+
+    <!-- Additional head content slot -->
+    <slot name="head" />
+  </head>
+
+  <body class={`font-sans bg-offwhite text-charcoal antialiased ${bodyClass}`}>
+    <!-- Skip to content for accessibility -->
+    <a
+      href="#main-content"
+      class="sr-only focus:not-sr-only focus:absolute focus:top-4 focus:left-4 bg-accent text-offwhite px-4 py-2 rounded-lg focus-ring z-50"
+    >
+      Przejdź do treści
+    </a>
+
+    <!-- Page content -->
+    <slot />
+
+    <!-- Footer scripts slot -->
+    <slot name="scripts" />
+  </body>
+</html>
+
+<!-- Reusable SEO Component -->
+<script>
+  // SEO Component Region - Can be imported and used in other components
+  export interface SEOData {
+    title?: string;
+    description?: string;
+    ogImage?: string;
+    ogImageAlt?: string;
+    canonical?: string;
+    noindex?: boolean;
+    type?: 'website' | 'article' | 'product';
+    locale?: string;
+    siteName?: string;
+    author?: string;
+    publishedTime?: string;
+    modifiedTime?: string;
+  }
+
+  export function generateSEOTags(seo: SEOData, site: URL, currentUrl: URL) {
+    const {
+      title = 'Project Iron',
+      description = 'Nowoczesna aplikacja zbudowana w Astro z Tailwind CSS',
+      ogImage = '/og-default.jpg',
+      ogImageAlt = 'Project Iron - Nowoczesna aplikacja',
+      canonical,
+      noindex = false,
+      type = 'website',
+      locale = 'pl_PL',
+      siteName = 'Project Iron',
+      author = 'Project Iron Team',
+      publishedTime,
+      modifiedTime,
+    } = seo;
+
+    const canonicalUrl = canonical || currentUrl.href;
+    const fullOgImage = new URL(ogImage, site).href;
+
+    return {
+      title,
+      description,
+      canonical: canonicalUrl,
+      ogImage: fullOgImage,
+      ogImageAlt,
+      noindex,
+      type,
+      locale,
+      siteName,
+      author,
+      publishedTime,
+      modifiedTime,
+    };
+  }
+</script>
+
+<style>
+  /* Screen reader only class for accessibility */
+  .sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
+  }
+
+  .focus\\:not-sr-only:focus {
+    position: static;
+    width: auto;
+    height: auto;
+    padding: 0.5rem 1rem;
+    margin: 0;
+    overflow: visible;
+    clip: auto;
+    white-space: normal;
+  }
+</style>

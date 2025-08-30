@@ -1,0 +1,36 @@
+---
+// Client-side filter bar for gallery
+const { tags = [], activeTag = 'all' } = Astro.props;
+---
+
+<div class="flex flex-wrap gap-2 mb-8 justify-center">
+  <button class="btn btn-secondary px-4 py-2" data-tag="all" aria-pressed={activeTag === 'all'}
+    >Wszystkie</button
+  >
+  {
+    tags.map((tag) => (
+      <button class="btn btn-secondary px-4 py-2" data-tag={tag} aria-pressed={activeTag === tag}>
+        {tag}
+      </button>
+    ))
+  }
+</div>
+<script type="module">
+  const filterBar = document.currentScript.parentElement;
+  const buttons = filterBar.querySelectorAll('button[data-tag]');
+  const allImages = document.querySelectorAll('[data-gallery-item]');
+  buttons.forEach((btn) => {
+    btn.addEventListener('click', () => {
+      const tag = btn.getAttribute('data-tag');
+      buttons.forEach((b) => b.setAttribute('aria-pressed', 'false'));
+      btn.setAttribute('aria-pressed', 'true');
+      allImages.forEach((img) => {
+        if (tag === 'all' || img.dataset.tags.split(',').includes(tag)) {
+          img.style.display = '';
+        } else {
+          img.style.display = 'none';
+        }
+      });
+    });
+  });
+</script>

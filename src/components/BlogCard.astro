@@ -1,0 +1,30 @@
+---
+// BlogCard: image, title, excerpt, date, author, link
+interface Props {
+  image: string;
+  title: string;
+  excerpt: string;
+  date: string;
+  author: string;
+  href: string;
+}
+const { image, title, excerpt, date, author, href } = Astro.props;
+---
+
+<article class="card card-hover max-w-md mx-auto flex flex-col overflow-hidden">
+  <a href={href} class="block">
+    <img src={image} alt={title} class="w-full h-48 object-cover rounded-t-xl" loading="lazy" />
+  </a>
+  <div class="p-6 flex flex-col flex-1">
+    <h3 class="text-heading text-xl font-bold mb-2">
+      <a href={href} class="hover:text-accent focus-ring">{title}</a>
+    </h3>
+    <div class="text-steel text-xs mb-2 flex items-center gap-2">
+      <span>{date}</span>
+      <span aria-hidden="true">•</span>
+      <span>{author}</span>
+    </div>
+    <p class="text-body text-steel mb-4 flex-1">{excerpt}</p>
+    <a href={href} class="btn btn-secondary w-full text-center mt-auto">Czytaj więcej</a>
+  </div>
+</article>

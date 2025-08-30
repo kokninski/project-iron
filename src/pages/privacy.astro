@@ -1,0 +1,57 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+---
+
+<BaseLayout seo={{ title: 'Polityka prywatności (RODO)' }}>
+  <Header />
+  <main class="container mx-auto py-16 max-w-3xl">
+    <h1 class="text-heading text-3xl font-bold mb-8">Polityka prywatności (RODO)</h1>
+    <nav class="mb-8 text-sm text-accent flex flex-wrap gap-4">
+      <a href="#dane-osobowe">1. Administrator danych osobowych</a>
+      <a href="#cele">2. Cele i podstawa przetwarzania</a>
+      <a href="#prawa">3. Prawa użytkownika</a>
+      <a href="#kontakt">4. Kontakt</a>
+    </nav>
+    <section id="dane-osobowe" class="mb-8">
+      <h2 class="text-xl font-semibold mb-2">1. Administrator danych osobowych</h2>
+      <p>
+        Administratorem danych osobowych jest Project Iron, ul. Przykładowa 1, 00-000 Warszawa, NIP:
+        000-000-00-00.
+      </p>
+    </section>
+    <section id="cele" class="mb-8">
+      <h2 class="text-xl font-semibold mb-2">2. Cele i podstawa przetwarzania</h2>
+      <p>
+        Dane przetwarzane są w celu realizacji zamówień, obsługi zapytań, marketingu oraz spełnienia
+        obowiązków prawnych. Podanie danych jest dobrowolne, ale niezbędne do realizacji usług.
+      </p>
+    </section>
+    <section id="prawa" class="mb-8">
+      <h2 class="text-xl font-semibold mb-2">3. Prawa użytkownika</h2>
+      <ul class="list-disc pl-6">
+        <li>Prawo dostępu do danych</li>
+        <li>Prawo do sprostowania i usunięcia danych</li>
+        <li>Prawo do ograniczenia przetwarzania</li>
+        <li>Prawo do przenoszenia danych</li>
+        <li>Prawo do sprzeciwu wobec przetwarzania</li>
+        <li>Prawo do wniesienia skargi do UODO</li>
+      </ul>
+    </section>
+    <section id="kontakt" class="mb-8">
+      <h2 class="text-xl font-semibold mb-2">4. Kontakt</h2>
+      <p>
+        W sprawach związanych z danymi osobowymi prosimy o kontakt: <a
+          href="mailto:kontakt@projectiron.pl"
+          class="text-accent underline">kontakt@projectiron.pl</a>
+      </p>
+    </section>
+    <nav class="mt-8 text-sm text-accent flex flex-wrap gap-4 border-t pt-4">
+      <a href="/terms">Regulamin</a>
+      <a href="/returns">Zwroty</a>
+      <a href="/cookies">Polityka cookies</a>
+    </nav>
+  </main>
+  <Footer />
+</BaseLayout>

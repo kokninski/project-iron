@@ -1,0 +1,160 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Header from '../components/Header.astro';
+import FeaturedBuildCard from '../components/FeaturedBuildCard.astro';
+import ProductCard from '../components/ProductCard.astro';
+import ProcessSteps from '../components/ProcessSteps.astro';
+import Footer from '../components/Footer.astro';
+---
+
+<BaseLayout>
+  <Header />
+  <main class="container mx-auto py-16">
+    <h1 class="text-heading text-4xl font-bold mb-8">Indywidualne realizacje</h1>
+    <p class="text-body text-steel max-w-2xl mb-12">
+      Zamów swój wymarzony chopper – od pomysłu do gotowego motocykla. Poznaj nasz proces, dostępne
+      opcje, harmonogram oraz warunki rezerwacji.
+    </p>
+
+    <section class="mb-16">
+      <h2 class="text-heading text-2xl font-bold mb-6">Jak wygląda proces?</h2>
+      <ProcessSteps
+        steps={[
+          { icon: '💡', title: 'Pomysł', description: 'Wspólnie omawiamy Twoją wizję i potrzeby.' },
+          {
+            icon: '✏️',
+            title: 'Projekt',
+            description: 'Tworzymy indywidualny projekt i dobieramy materiały.',
+          },
+          {
+            icon: '⚒️',
+            title: 'Budowa',
+            description: 'Ręcznie wykonujemy każdy element z dbałością o detale.',
+          },
+          {
+            icon: '🧪',
+            title: 'Testy',
+            description: 'Sprawdzamy jakość i bezpieczeństwo gotowego choppera.',
+          },
+          {
+            icon: '🚚',
+            title: 'Dostawa',
+            description: 'Dostarczamy gotowy motocykl pod wskazany adres.',
+          },
+        ]}
+      />
+    </section>
+
+    <section class="mb-16">
+      <h2 class="text-heading text-2xl font-bold mb-6">Opcje personalizacji</h2>
+      <ul class="list-disc pl-6 text-steel mb-4">
+        <li>Wybór koloru i wykończenia ramy</li>
+        <li>Indywidualny projekt zbiornika i detali</li>
+        <li>Możliwość doboru silnika i osprzętu</li>
+        <li>Personalizowane akcesoria i dodatki</li>
+      </ul>
+      <p class="text-body text-steel">
+        Każdy projekt wyceniamy indywidualnie – skontaktuj się, by poznać szczegóły.
+      </p>
+    </section>
+
+    <section class="mb-16">
+      <h2 class="text-heading text-2xl font-bold mb-6">Harmonogram realizacji</h2>
+      <ol class="list-decimal pl-6 text-steel mb-4">
+        <li>Wstępna konsultacja i omówienie pomysłu</li>
+        <li>Przygotowanie projektu i wyceny (do 2 tygodni)</li>
+        <li>Podpisanie umowy i wpłata zadatku</li>
+        <li>Realizacja budowy (zwykle 3–6 miesięcy)</li>
+        <li>Odbiór lub dostawa gotowego motocykla</li>
+      </ol>
+      <p class="text-body text-steel">
+        Czas realizacji zależy od stopnia personalizacji i dostępności komponentów.
+      </p>
+    </section>
+
+    <section class="mb-16">
+      <h2 class="text-heading text-2xl font-bold mb-6">Rezerwacja i konsultacje</h2>
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-8 mb-6">
+        <ProductCard
+          image="/images/products/zadatek.jpg"
+          name="Zadatek na realizację"
+          pricePLN={1000}
+          stripeUrl="https://buy.stripe.com/test_zadatek"
+        />
+        <ProductCard
+          image="/images/products/konsultacja.jpg"
+          name="Konsultacja projektowa"
+          pricePLN={200}
+          stripeUrl="https://buy.stripe.com/test_konsultacja"
+        />
+      </div>
+      <p class="text-body text-steel">
+        Zadatek gwarantuje rezerwację terminu. Konsultacja online to idealny sposób na omówienie
+        szczegółów przed podjęciem decyzji.
+      </p>
+    </section>
+
+    <section class="mb-16">
+      <h2 class="text-heading text-2xl font-bold mb-6">Najczęściej zadawane pytania</h2>
+      <div class="max-w-2xl mx-auto">
+        <details class="mb-4 border rounded-lg p-4 bg-offwhite/80">
+          <summary class="font-semibold cursor-pointer"
+            >Czy mogę zamówić motocykl według własnego projektu?</summary
+          >
+          <p class="mt-2 text-steel">
+            Tak! Każdy projekt realizujemy indywidualnie, zgodnie z Twoimi oczekiwaniami.
+          </p>
+        </details>
+        <details class="mb-4 border rounded-lg p-4 bg-offwhite/80">
+          <summary class="font-semibold cursor-pointer"
+            >Jaki jest czas oczekiwania na realizację?</summary
+          >
+          <p class="mt-2 text-steel">
+            Standardowy czas budowy to 3–6 miesięcy, w zależności od stopnia personalizacji.
+          </p>
+        </details>
+        <details class="mb-4 border rounded-lg p-4 bg-offwhite/80">
+          <summary class="font-semibold cursor-pointer">Czy zadatek jest zwrotny?</summary>
+          <p class="mt-2 text-steel">
+            Zadatek jest bezzwrotny, ale gwarantuje rezerwację terminu i rozpoczęcie prac.
+          </p>
+        </details>
+        <details class="mb-4 border rounded-lg p-4 bg-offwhite/80">
+          <summary class="font-semibold cursor-pointer">Jak wygląda proces konsultacji?</summary>
+          <p class="mt-2 text-steel">
+            Konsultacja odbywa się online lub telefonicznie – omówimy Twój pomysł, odpowiemy na
+            pytania i doradzimy najlepsze rozwiązania.
+          </p>
+        </details>
+      </div>
+    </section>
+
+    <section class="mb-16">
+      <h2 class="text-heading text-2xl font-bold mb-6">Przykładowa realizacja</h2>
+      <FeaturedBuildCard
+        images={[
+          { src: '/images/builds/black-iron-1.jpg' },
+          { src: '/images/builds/black-iron-2.jpg' },
+          { src: '/images/builds/black-iron-3.jpg' },
+          { src: '/images/builds/black-iron-4.jpg' },
+          { src: '/images/builds/black-iron-5.jpg' },
+        ]}
+        title="Black Iron"
+        specs={[
+          { label: 'Stal konstrukcyjna', value: 'S355' },
+          { label: 'Wykończenie', value: 'czarny mat' },
+          { label: 'Wysokość', value: '2,4 m' },
+          { label: 'Szerokość', value: '1,2 m' },
+          { label: 'Waga', value: '180 kg' },
+        ]}
+        testimonial={{
+          quote:
+            'Realizacja przerosła nasze oczekiwania – solidność i estetyka na najwyższym poziomie.',
+          author: 'Anna Zielińska',
+          role: 'Klientka indywidualna',
+        }}
+      />
+    </section>
+  </main>
+  <Footer />
+</BaseLayout>

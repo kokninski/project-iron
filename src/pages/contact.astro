@@ -1,0 +1,100 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+---
+
+<BaseLayout>
+  <Header />
+  <main class="container mx-auto py-16">
+    <h1 class="text-heading text-4xl font-bold mb-8">Kontakt</h1>
+    <form
+      id="contact-form"
+      method="POST"
+      action="/functions/contact.ts"
+      class="space-y-6 max-w-xl mx-auto"
+      novalidate
+    >
+      <div>
+        <label for="name" class="block font-semibold mb-1">Imię i nazwisko *</label>
+        <input
+          id="name"
+          name="name"
+          type="text"
+          required
+          class="input w-full"
+          autocomplete="name"
+        />
+      </div>
+      <div>
+        <label for="email" class="block font-semibold mb-1">E-mail *</label>
+        <input
+          id="email"
+          name="email"
+          type="email"
+          required
+          class="input w-full"
+          autocomplete="email"
+        />
+      </div>
+      <div>
+        <label for="phone" class="block font-semibold mb-1">Telefon</label>
+        <input id="phone" name="phone" type="tel" class="input w-full" autocomplete="tel" />
+      </div>
+      <div>
+        <label for="message" class="block font-semibold mb-1">Wiadomość *</label>
+        <textarea id="message" name="message" required rows="5" class="input w-full"></textarea>
+      </div>
+      <div class="flex items-start gap-2">
+        <input id="consent" name="consent" type="checkbox" required class="mt-1" />
+        <label for="consent" class="text-sm"
+          >Wyrażam zgodę na przetwarzanie danych osobowych zgodnie z <a
+            href="/legal/privacy"
+            class="text-accent underline"
+            target="_blank">Polityką prywatności</a
+          > *</label
+        >
+      </div>
+      <div>
+        <!-- Cloudflare Turnstile widget placeholder -->
+        <div
+          id="turnstile-widget"
+          class="mb-4"
+          data-sitekey={import.meta.env.PUBLIC_TURNSTILE_SITE_KEY}
+        >
+        </div>
+      </div>
+      <button type="submit" class="btn btn-primary w-full">Wyślij wiadomość</button>
+      <div id="form-status" class="mt-4 text-center text-base font-semibold" aria-live="polite">
+      </div>
+    </form>
+    <script type="module">
+      const form = document.getElementById('contact-form');
+      const status = document.getElementById('form-status');
+      form?.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        status.textContent = '';
+        const fd = new FormData(form);
+        try {
+          const res = await fetch(form.action, {
+            method: 'POST',
+            body: fd,
+          });
+          if (res.ok) {
+            form.reset();
+            status.textContent = 'Dziękujemy! Twoja wiadomość została wysłana.';
+            status.className = 'mt-4 text-center text-green-700 font-semibold';
+          } else {
+            const data = await res.json().catch(() => ({}));
+            status.textContent = data.error || 'Wystąpił błąd podczas wysyłania wiadomości.';
+            status.className = 'mt-4 text-center text-red-700 font-semibold';
+          }
+        } catch {
+          status.textContent = 'Nie udało się połączyć z serwerem.';
+          status.className = 'mt-4 text-center text-red-700 font-semibold';
+        }
+      });
+    </script>
+  </main>
+  <Footer />
+</BaseLayout>

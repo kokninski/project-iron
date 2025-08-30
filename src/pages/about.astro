@@ -1,0 +1,111 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+---
+
+<BaseLayout
+  seo={{
+    title: 'O nas',
+    description:
+      'Poznaj historię naszej pracowni, zespół pasjonatów, gwarancję jakości i zasady dostawy.',
+  }}
+>
+  <Header />
+  <main class="container mx-auto py-16 max-w-4xl">
+    <section class="mb-16">
+      <h1 class="text-heading text-4xl font-bold mb-6">Nasza historia</h1>
+      <div class="grid md:grid-cols-2 gap-8 items-center">
+        <div>
+          <p class="mb-4">
+            Projekt Iron to efekt wieloletniej pasji do motocykli, metalu i rzemiosła. Nasza
+            pracownia powstała z marzenia o tworzeniu niepowtarzalnych maszyn, które łączą klasykę z
+            nowoczesnością. Każdy projekt to dla nas wyzwanie i okazja do pokazania kunsztu oraz
+            indywidualnego podejścia do klienta.
+          </p>
+          <p>
+            Od pierwszego spawu po ostatni detal – dbamy o każdy etap budowy. Nasze realizacje
+            trafiają do pasjonatów w całej Polsce i za granicą.
+          </p>
+        </div>
+        <img
+          src="/images/about/workshop-1.jpg"
+          alt="Pracownia Project Iron"
+          class="rounded-xl shadow-lg w-full h-64 object-cover"
+          loading="lazy"
+        />
+      </div>
+    </section>
+
+    <section class="mb-16">
+      <h2 class="text-heading text-2xl font-bold mb-4">Nasz zespół</h2>
+      <div class="grid md:grid-cols-3 gap-8">
+        <div class="flex flex-col items-center text-center">
+          <img
+            src="/images/about/team-krzysztof.jpg"
+            alt="Krzysztof Nowak"
+            class="w-32 h-32 rounded-full mb-3 object-cover shadow"
+            loading="lazy"
+          />
+          <h3 class="font-semibold text-lg">Krzysztof Nowak</h3>
+          <p class="text-steel text-sm">Założyciel, główny konstruktor</p>
+        </div>
+        <div class="flex flex-col items-center text-center">
+          <img
+            src="/images/about/team-anna.jpg"
+            alt="Anna Zielińska"
+            class="w-32 h-32 rounded-full mb-3 object-cover shadow"
+            loading="lazy"
+          />
+          <h3 class="font-semibold text-lg">Anna Zielińska</h3>
+          <p class="text-steel text-sm">Projektantka, obsługa klienta</p>
+        </div>
+        <div class="flex flex-col items-center text-center">
+          <img
+            src="/images/about/team-marcin.jpg"
+            alt="Marcin Kowal"
+            class="w-32 h-32 rounded-full mb-3 object-cover shadow"
+            loading="lazy"
+          />
+          <h3 class="font-semibold text-lg">Marcin Kowal</h3>
+          <p class="text-steel text-sm">Lakiernik, detale</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="mb-16">
+      <h2 class="text-heading text-2xl font-bold mb-4">Gwarancja jakości</h2>
+      <p>
+        Każdy motocykl opuszczający naszą pracownię objęty jest 12-miesięczną gwarancją. Zapewniamy
+        wsparcie techniczne, serwis oraz dostęp do części zamiennych. Jakość i bezpieczeństwo to dla
+        nas priorytet.
+      </p>
+    </section>
+
+    <section class="mb-16">
+      <h2 class="text-heading text-2xl font-bold mb-4">Dostawa</h2>
+      <p>
+        Realizujemy dostawy na terenie całej Polski oraz do krajów UE. Motocykle transportujemy w
+        specjalnie przygotowanych pojazdach, dbając o ich bezpieczeństwo na każdym etapie podróży.
+      </p>
+    </section>
+
+    <section>
+      <div class="grid md:grid-cols-2 gap-8">
+        <img
+          src="/images/about/workshop-2.jpg"
+          alt="Pracownia Project Iron – detale"
+          class="rounded-xl shadow-lg w-full h-64 object-cover"
+          loading="lazy"
+        />
+        <img
+          src="/images/about/workshop-3.jpg"
+          alt="Pracownia Project Iron – prace"
+          class="rounded-xl shadow-lg w-full h-64 object-cover"
+          loading="lazy"
+        />
+      </div>
+    </section>
+  </main>
+  <Footer />
+</BaseLayout>

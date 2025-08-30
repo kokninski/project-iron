@@ -1,0 +1,166 @@
+---
+// Header component with sticky nav, logo, links, CTA, and mobile menu
+type NavItem = { label: string; href: string };
+const navLinks: NavItem[] = [
+  { label: 'Builds', href: '/custom-builds' },
+  { label: 'Gallery', href: '/gallery' },
+  { label: 'Shop', href: '/shop' },
+  { label: 'Blog', href: '/blog' },
+  { label: 'About', href: '/about' },
+  { label: 'Contact', href: '/contact' },
+];
+---
+
+<header class="sticky top-0 z-50 bg-offwhite/90 backdrop-blur border-b border-steel/10 shadow-sm">
+  <nav
+    class="container mx-auto flex items-center justify-between py-3 px-4"
+    aria-label="Główna nawigacja"
+  >
+    <!-- Logo -->
+    <a
+      href="/"
+      class="flex items-center gap-2 font-display text-2xl font-bold text-accent focus-ring"
+      aria-label="Strona główna"
+    >
+      <img src="/favicon.svg" alt="Project Iron logo" class="w-8 h-8" />
+      Project Iron
+    </a>
+
+    <!-- Desktop nav links -->
+    <ul class="hidden md:flex items-center gap-6 ml-8" role="menubar">
+      {
+        navLinks.map(({ label, href }) => (
+          <li role="none">
+            <a
+              href={href}
+              class="text-steel hover:text-accent px-2 py-1 rounded focus-ring transition-colors duration-150"
+              role="menuitem"
+              tabindex="0"
+            >
+              {label}
+            </a>
+          </li>
+        ))
+      }
+    </ul>
+
+    <!-- CTA button (desktop) -->
+    <a
+      href="/contact"
+      class="hidden md:inline-flex btn btn-primary text-base px-6 py-2 ml-4"
+      tabindex="0"
+    >
+      Rozpocznij projekt
+    </a>
+
+    <!-- Mobile menu button -->
+    <button
+      id="mobile-menu-btn"
+      class="md:hidden flex items-center justify-center w-10 h-10 rounded focus-ring"
+      aria-label="Otwórz menu"
+      aria-controls="mobile-menu"
+      aria-expanded="false"
+    >
+      <svg
+        class="w-6 h-6 text-accent"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="2"
+        viewBox="0 0 24 24"
+        aria-hidden="true"
+        ><path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h16M4 18h16"
+        ></path></svg
+      >
+    </button>
+  </nav>
+
+  <!-- Mobile menu (disclosure) -->
+  <div
+    id="mobile-menu"
+    class="md:hidden fixed inset-0 bg-offwhite/95 z-40 flex flex-col items-center justify-center gap-8 opacity-0 pointer-events-none transition-opacity duration-200"
+    aria-label="Menu mobilne"
+    tabindex="-1"
+  >
+    <button
+      id="mobile-menu-close"
+      class="absolute top-4 right-4 w-10 h-10 rounded-full flex items-center justify-center focus-ring"
+      aria-label="Zamknij menu"
+    >
+      <svg
+        class="w-6 h-6 text-accent"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="2"
+        viewBox="0 0 24 24"
+        aria-hidden="true"
+        ><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"></path></svg
+      >
+    </button>
+    <ul class="flex flex-col gap-6 text-center" role="menubar">
+      {
+        navLinks.map(({ label, href }) => (
+          <li role="none">
+            <a
+              href={href}
+              class="text-steel hover:text-accent text-xl px-4 py-2 rounded focus-ring transition-colors duration-150"
+              role="menuitem"
+              tabindex="0"
+            >
+              {label}
+            </a>
+          </li>
+        ))
+      }
+      <li>
+        <a href="/contact" class="btn btn-primary text-lg px-8 py-3 mt-4" tabindex="0"
+          >Rozpocznij projekt</a
+        >
+      </li>
+    </ul>
+  </div>
+
+  <script type="module">
+    // Mobile menu open/close logic with accessibility
+    const btn = document.getElementById('mobile-menu-btn');
+    const menu = document.getElementById('mobile-menu');
+    const closeBtn = document.getElementById('mobile-menu-close');
+    let lastFocused = null;
+
+    function openMenu() {
+      menu.classList.remove('opacity-0', 'pointer-events-none');
+      menu.classList.add('opacity-100');
+      menu.setAttribute('aria-hidden', 'false');
+      btn.setAttribute('aria-expanded', 'true');
+      lastFocused = document.activeElement;
+      menu.focus();
+    }
+    function closeMenu() {
+      menu.classList.add('opacity-0', 'pointer-events-none');
+      menu.classList.remove('opacity-100');
+      menu.setAttribute('aria-hidden', 'true');
+      btn.setAttribute('aria-expanded', 'false');
+      if (lastFocused) lastFocused.focus();
+    }
+    btn?.addEventListener('click', openMenu);
+    closeBtn?.addEventListener('click', closeMenu);
+    // Close on Escape
+    menu?.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') closeMenu();
+    });
+    // Trap focus inside menu
+    menu?.addEventListener('keydown', (e) => {
+      if (e.key === 'Tab') {
+        const focusable = menu.querySelectorAll('a,button');
+        const first = focusable[0];
+        const last = focusable[focusable.length - 1];
+        if (e.shiftKey && document.activeElement === first) {
+          e.preventDefault();
+          last.focus();
+        } else if (!e.shiftKey && document.activeElement === last) {
+          e.preventDefault();
+          first.focus();
+        }
+      }
+    });
+  </script>
+</header>

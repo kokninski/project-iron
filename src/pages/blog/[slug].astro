@@ -1,0 +1,90 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Header from '../../components/Header.astro';
+import Footer from '../../components/Footer.astro';
+import { getCollection, getEntryBySlug } from 'astro:content';
+import { buildJsonLd } from '../../lib/seo';
+
+export async function getStaticPaths() {
+  const posts = await getCollection('posts');
+  return posts.map(post => ({ params: { slug: post.slug } }));
+}
+
+const { slug } = Astro.params;
+const post = await getEntryBySlug('posts', slug);
+if (!post) throw new Error('Post not found');
+
+// Sort all posts by date descending for prev/next
+const allPosts = (await getCollection('posts')).sort((a, b) => b.data.date.getTime() - a.data.date.getTime());
+const idx = allPosts.findIndex(p => p.slug === slug);
+const prev = idx > 0 ? allPosts[idx - 1] : null;
+const next = idx < allPosts.length - 1 ? allPosts[idx + 1] : null;
+
+// Reading time (simple: 200 words/min)
+const words = post.body.split(/\s+/).length;
+const readingTime = Math.max(1, Math.round(words / 200));
+
+// Table of contents (h2 only)
+const toc = Array.from(post.body.matchAll(/^##\s+(.+)$/gm) as Iterable<RegExpMatchArray>).map((m) => m[1]);
+
+// JSON-LD for Article
+const jsonLd = buildJsonLd('Article', {
+  headline: post.data.title,
+  image: post.data.coverImage,
+  author: { '@type': 'Person', name: post.data.author },
+  datePublished: post.data.date,
+  dateModified: post.data.date,
+  description: post.data.excerpt,
+  mainEntityOfPage: {
+    '@type': 'WebPage',
+    '@id': Astro.url?.href || ''
+  }
+});
+---
+
+
+<BaseLayout seo={{
+  title: post.data.title,
+  description: post.data.excerpt,
+  ogImage: post.data.coverImage,
+  type: 'article',
+  author: post.data.author,
+  publishedTime: post.data.date.toISOString(),
+}}>
+  <Header />
+  <main class="container mx-auto py-16 max-w-3xl">
+    <article>
+      <img src={post.data.coverImage} alt={post.data.title} class="w-full h-64 object-cover rounded-xl mb-8" loading="lazy" />
+      <h1 class="text-heading text-4xl font-bold mb-4">{post.data.title}</h1>
+      <div class="flex flex-wrap gap-4 text-steel text-sm mb-6">
+        <span>Autor: {post.data.author}</span>
+        <span>•</span>
+        <span>{post.data.date.toLocaleDateString('pl-PL')}</span>
+        <span>•</span>
+        <span>{readingTime} min czytania</span>
+      </div>
+      {toc.length > 0 && (
+        <nav class="mb-8 bg-steel/10 p-4 rounded-lg">
+          <strong class="block mb-2">Spis treści:</strong>
+          <ul class="list-disc pl-6">
+            {toc.map(item => (
+              <li><a href={`#${item.replace(/\s+/g, '-').toLowerCase()}`}>{item}</a></li>
+            ))}
+          </ul>
+        </nav>
+      )}
+      <div class="prose prose-lg max-w-none" set:html={post.body} />
+    </article>
+    <div class="flex justify-between mt-12">
+      {prev && (
+        <a href={`/blog/${prev.slug}/`} class="btn btn-secondary">← {prev.data.title}</a>
+      )}
+      <span></span>
+      {next && (
+        <a href={`/blog/${next.slug}/`} class="btn btn-secondary">{next.data.title} →</a>
+      )}
+    </div>
+    <script type="application/ld+json">{JSON.stringify(jsonLd)}</script>
+  </main>
+  <Footer />
+</BaseLayout>

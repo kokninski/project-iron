@@ -1,0 +1,28 @@
+---
+// ProcessSteps: 5 steps
+interface Step {
+  icon: any;
+  title: string;
+  description: string;
+}
+const { steps = [] } = Astro.props;
+---
+
+<section class="w-full bg-offwhite py-16">
+  <div class="container mx-auto px-4">
+    <div class="grid md:grid-cols-5 gap-8">
+      {
+        steps.map(({ icon, title, description }: Step, i: number) => (
+          <div class="flex flex-col items-center text-center">
+            <div class="mb-4 text-accent">{icon}</div>
+            <div class="w-10 h-10 flex items-center justify-center rounded-full bg-accent/10 mb-4">
+              <span class="text-2xl font-bold text-accent">{i + 1}</span>
+            </div>
+            <h4 class="text-heading text-lg font-semibold mb-2">{title}</h4>
+            <p class="text-body text-steel text-sm">{description}</p>
+          </div>
+        ))
+      }
+    </div>
+  </div>
+</section>

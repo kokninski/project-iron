@@ -1,0 +1,27 @@
+---
+// TestimonialCard: single testimonial
+interface Props {
+  quote: string;
+  author: string;
+  role?: string;
+  avatarUrl?: string;
+}
+const { quote, author, role, avatarUrl } = Astro.props;
+---
+
+<figure class="card card-hover max-w-md mx-auto p-8 flex flex-col items-center text-center">
+  {
+    avatarUrl && (
+      <img
+        src={avatarUrl}
+        alt={author}
+        class="w-16 h-16 rounded-full mb-4 border-2 border-accent object-cover"
+      />
+    )
+  }
+  <blockquote class="text-lg italic text-steel mb-4">“{quote}”</blockquote>
+  <figcaption class="text-heading text-accent font-semibold">
+    {author}
+    {role && <span class="block text-sm text-steel font-normal mt-1">{role}</span>}
+  </figcaption>
+</figure>

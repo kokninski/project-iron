@@ -1,0 +1,54 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+---
+
+<BaseLayout seo={{ title: 'Zwroty i reklamacje' }}>
+  <Header />
+  <main class="container mx-auto py-16 max-w-3xl">
+    <h1 class="text-heading text-3xl font-bold mb-8">Zwroty i reklamacje</h1>
+    <nav class="mb-8 text-sm text-accent flex flex-wrap gap-4">
+      <a href="#zwroty">1. Zwroty (merch)</a>
+      <a href="#wyjatki">2. Wyjątki – projekty indywidualne</a>
+      <a href="#reklamacje">3. Reklamacje</a>
+      <a href="#kontakt">4. Kontakt</a>
+    </nav>
+    <section id="zwroty" class="mb-8">
+      <h2 class="text-xl font-semibold mb-2">1. Zwroty (merch)</h2>
+      <p>
+        Kupujący ma prawo odstąpić od umowy i zwrócić towar (merch) w ciągu 14 dni od otrzymania
+        przesyłki bez podania przyczyny. Zwrot możliwy jest tylko dla produktów nieużywanych, w
+        oryginalnym opakowaniu.
+      </p>
+    </section>
+    <section id="wyjatki" class="mb-8">
+      <h2 class="text-xl font-semibold mb-2">2. Wyjątki – projekty indywidualne</h2>
+      <p>
+        Prawo do zwrotu nie przysługuje w przypadku produktów wykonanych na indywidualne zamówienie
+        (np. motocykle custom, personalizowane części).
+      </p>
+    </section>
+    <section id="reklamacje" class="mb-8">
+      <h2 class="text-xl font-semibold mb-2">3. Reklamacje</h2>
+      <p>
+        W przypadku wad towaru prosimy o kontakt mailowy. Reklamacje rozpatrywane są w ciągu 14 dni
+        od zgłoszenia.
+      </p>
+    </section>
+    <section id="kontakt" class="mb-8">
+      <h2 class="text-xl font-semibold mb-2">4. Kontakt</h2>
+      <p>
+        W sprawach zwrotów i reklamacji prosimy o kontakt: <a
+          href="mailto:kontakt@projectiron.pl"
+          class="text-accent underline">kontakt@projectiron.pl</a>
+      </p>
+    </section>
+    <nav class="mt-8 text-sm text-accent flex flex-wrap gap-4 border-t pt-4">
+      <a href="/privacy">Polityka prywatności</a>
+      <a href="/terms">Regulamin</a>
+      <a href="/cookies">Polityka cookies</a>
+    </nav>
+  </main>
+  <Footer />
+</BaseLayout>

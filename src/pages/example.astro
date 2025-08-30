@@ -1,0 +1,168 @@
+---
+// Example page using BaseLayout with custom SEO
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Seo from '../components/Seo.astro';
+import type { SEOProps } from '../types/index';
+
+// Custom SEO for this page
+const seoData: SEOProps = {
+  title: 'Strona główna - Project Iron',
+  description:
+    'Witaj w Project Iron - nowoczesnej aplikacji zbudowanej w Astro z Tailwind CSS. Poznaj nasze funkcje i możliwości.',
+  ogImage: '/og-home.jpg',
+  ogImageAlt: 'Project Iron - Strona główna',
+  type: 'website',
+};
+---
+
+<BaseLayout seo={seoData} bodyClass="home-page">
+  <!-- Additional head content -->
+  <Fragment slot="head">
+    <!-- Page-specific meta tags or scripts -->
+    <meta
+      name="keywords"
+      content="astro, tailwind, typescript, nowoczesna aplikacja, projekt iron"
+    />
+  </Fragment>
+
+  <main id="main-content" class="min-h-screen">
+    <!-- Hero Section -->
+    <section class="bg-gradient-to-br from-charcoal to-steel text-offwhite py-20">
+      <div class="container mx-auto px-4">
+        <div class="text-center max-w-4xl mx-auto">
+          <h1 class="text-heading text-5xl lg:text-7xl font-bold mb-6 animate-fade-in">
+            Witaj w <span class="text-accent">Project Iron</span>
+          </h1>
+          <p class="text-body text-xl lg:text-2xl mb-8 opacity-90 animate-slide-up">
+            Nowoczesna aplikacja zbudowana w Astro z Tailwind CSS
+          </p>
+          <div class="flex flex-col sm:flex-row gap-4 justify-center animate-slide-up">
+            <button class="btn btn-primary text-lg px-8 py-4"> Rozpocznij teraz </button>
+            <button class="btn btn-secondary text-lg px-8 py-4"> Dowiedz się więcej </button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Features Section -->
+    <section class="py-20 bg-offwhite">
+      <div class="container mx-auto px-4">
+        <div class="text-center mb-16">
+          <h2 class="text-heading text-4xl lg:text-5xl font-bold mb-6 text-charcoal">
+            Dlaczego Project Iron?
+          </h2>
+          <p class="text-body text-xl text-steel max-w-3xl mx-auto">
+            Poznaj funkcje, które czynią naszą aplikację wyjątkową
+          </p>
+        </div>
+
+        <div class="grid md:grid-cols-3 gap-8">
+          <div class="card card-hover text-center animate-fade-in">
+            <div
+              class="w-16 h-16 bg-accent/10 rounded-full flex items-center justify-center mx-auto mb-6"
+            >
+              <span class="text-2xl">⚡</span>
+            </div>
+            <h3 class="text-heading text-2xl font-semibold mb-4">Szybkość</h3>
+            <p class="text-body text-steel mb-6">
+              Zoptymalizowana wydajność dzięki Astro i nowoczesnym technologiom
+            </p>
+            <span class="chip chip-success">Zoptymalizowane</span>
+          </div>
+
+          <div class="card card-hover text-center animate-fade-in">
+            <div
+              class="w-16 h-16 bg-success/10 rounded-full flex items-center justify-center mx-auto mb-6"
+            >
+              <span class="text-2xl">🎨</span>
+            </div>
+            <h3 class="text-heading text-2xl font-semibold mb-4">Piękny design</h3>
+            <p class="text-body text-steel mb-6">
+              Nowoczesny interfejs zaprojektowany z myślą o użytkownikach
+            </p>
+            <span class="chip chip-accent">Eleganckie</span>
+          </div>
+
+          <div class="card card-hover text-center animate-fade-in">
+            <div
+              class="w-16 h-16 bg-warn/10 rounded-full flex items-center justify-center mx-auto mb-6"
+            >
+              <span class="text-2xl">🔧</span>
+            </div>
+            <h3 class="text-heading text-2xl font-semibold mb-4">Łatwa konserwacja</h3>
+            <p class="text-body text-steel mb-6">
+              TypeScript, komponenty i clear architecture dla developera
+            </p>
+            <span class="chip chip-warn">Developer-friendly</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- CTA Section -->
+    <section class="py-20 bg-accent text-offwhite">
+      <div class="container mx-auto px-4 text-center">
+        <h2 class="text-heading text-4xl font-bold mb-6">Gotowy na rozpoczęcie?</h2>
+        <p class="text-body text-xl mb-8 opacity-90">Dołącz do tysięcy zadowolonych użytkowników</p>
+        <button
+          class="btn bg-offwhite text-accent hover:bg-offwhite/90 text-lg px-8 py-4 font-semibold"
+        >
+          Rozpocznij za darmo
+        </button>
+      </div>
+    </section>
+  </main>
+
+  <!-- Page-specific scripts -->
+  <Fragment slot="scripts">
+    <script>
+      // Page-specific JavaScript
+      console.log('Project Iron - Strona główna załadowana');
+
+      // Simple animation trigger on scroll
+      const observeElements = () => {
+        const elements = document.querySelectorAll('.animate-fade-in, .animate-slide-up');
+        const observer = new IntersectionObserver((entries) => {
+          entries.forEach((entry) => {
+            if (entry.isIntersecting) {
+              entry.target.classList.add('animation-visible');
+            }
+          });
+        });
+
+        elements.forEach((el) => observer.observe(el));
+      };
+
+      // Initialize animations when DOM is loaded
+      document.addEventListener('DOMContentLoaded', observeElements);
+    </script>
+  </Fragment>
+</BaseLayout>
+
+<style>
+  /* Page-specific styles */
+  .home-page {
+    scroll-behavior: smooth;
+  }
+
+  /* Animation enhancements */
+  .animate-fade-in,
+  .animate-slide-up {
+    opacity: 0;
+    transition: all 0.6s ease-out;
+  }
+
+  .animate-slide-up {
+    transform: translateY(30px);
+  }
+
+  .animation-visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  /* Custom gradient background */
+  .bg-gradient-to-br {
+    background-image: linear-gradient(to bottom right, var(--tw-gradient-stops));
+  }
+</style>

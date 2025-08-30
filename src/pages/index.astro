@@ -1,11 +1,132 @@
 ---
-import Welcome from '../components/Welcome.astro';
-import Layout from '../layouts/Layout.astro';
 
-// Welcome to Astro! Wondering what to do next? Check out the Astro documentation at https://docs.astro.build
-// Don't want to use any of this? Delete everything in this file, the `assets`, `components`, and `layouts` directories, and start fresh.
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Header from '../components/Header.astro';
+import Hero from '../components/Hero.astro';
+import USPStrip from '../components/USPStrip.astro';
+import FeaturedBuildCard from '../components/FeaturedBuildCard.astro';
+import ProcessSteps from '../components/ProcessSteps.astro';
+import TestimonialCard from '../components/TestimonialCard.astro';
+import Footer from '../components/Footer.astro';
+import { ogImage, buildJsonLd } from '../lib/seo';
+
+const featuredBuild = {
+  images: [
+	{ src: '/images/builds/black-iron-1.jpg' },
+	{ src: '/images/builds/black-iron-2.jpg' },
+	{ src: '/images/builds/black-iron-3.jpg' },
+	{ src: '/images/builds/black-iron-4.jpg' },
+	{ src: '/images/builds/black-iron-5.jpg' },
+  ],
+  title: 'Black Iron',
+  specs: [
+	{ label: 'Stal konstrukcyjna', value: 'S355' },
+	{ label: 'Wykończenie', value: 'czarny mat' },
+	{ label: 'Wysokość', value: '2,4 m' },
+	{ label: 'Szerokość', value: '1,2 m' },
+	{ label: 'Waga', value: '180 kg' },
+  ],
+  testimonial: {
+	quote: 'Realizacja przerosła nasze oczekiwania – solidność i estetyka na najwyższym poziomie.',
+	author: 'Anna Zielińska',
+	role: 'Klientka indywidualna',
+  },
+};
+
+const processSteps = [
+  { icon: '💡', title: 'Pomysł', description: 'Wspólnie omawiamy Twoją wizję i potrzeby.' },
+  { icon: '✏️', title: 'Projekt', description: 'Tworzymy indywidualny projekt i dobieramy materiały.' },
+  { icon: '⚒️', title: 'Budowa', description: 'Ręcznie wykonujemy każdy element z dbałością o detale.' },
+  { icon: '🧪', title: 'Testy', description: 'Sprawdzamy jakość i bezpieczeństwo gotowego choppera.' },
+  { icon: '🚚', title: 'Dostawa', description: 'Dostarczamy gotowy motocykl pod wskazany adres.' },
+];
+
+const testimonials = [
+  {
+	quote: 'To nie tylko motocykl, to spełnienie marzeń! Polecam każdemu pasjonatowi.',
+	author: 'Marek Kwiatkowski',
+	role: 'Klient',
+	avatarUrl: '/images/avatars/marek.jpg',
+  },
+  {
+	quote: 'Profesjonalizm, kontakt i jakość na najwyższym poziomie.',
+	author: 'Ewa Nowicka',
+	role: 'Klientka',
+	avatarUrl: '/images/avatars/ewa.jpg',
+  },
+  {
+	quote: 'Chopper wygląda i jeździ lepiej niż się spodziewałem. Dziękuję!',
+	author: 'Tomasz Zieliński',
+	role: 'Klient',
+	avatarUrl: '/images/avatars/tomek.jpg',
+  },
+];
+
+const orgJsonLd = buildJsonLd('Organization', {
+  name: 'Project Iron',
+  url: 'https://YOUR_DOMAIN',
+  logo: '/favicon.svg',
+  sameAs: [
+	'https://facebook.com/',
+	'https://instagram.com/',
+	'https://x.com/',
+	'https://youtube.com/'
+  ],
+  address: {
+	'@type': 'PostalAddress',
+	streetAddress: 'ul. Przykładowa 123',
+	addressLocality: 'Warszawa',
+	postalCode: '00-000',
+	addressCountry: 'PL',
+  },
+  contactPoint: {
+	'@type': 'ContactPoint',
+	telephone: '+48 123 456 789',
+	contactType: 'customer service',
+	email: 'kontakt@projectiron.pl',
+  },
+});
+
 ---
 
-<Layout>
-	<Welcome />
-</Layout>
+<BaseLayout seo={{
+  title: 'Ręcznie budowane choppery z Polski',
+  description: 'Indywidualne motocykle na zamówienie. Poznaj nasz proces, zobacz realizacje i opinie klientów.',
+  ogImage: ogImage('/images/hero-bg.jpg'),
+}}>
+  <Header />
+  <Hero
+	headline="Ręcznie budowane choppery z Polski"
+	subhead="Indywidualne motocykle na zamówienie. Poznaj nasz proces, zobacz realizacje i opinie klientów."
+	primaryCta={{ label: 'Rozpocznij projekt', href: '/contact' }}
+	secondaryCta={{ label: 'Zobacz realizacje', href: '/custom-builds' }}
+  >
+	<img slot="bg" src="/images/hero-bg.jpg" alt="Chopper na tle warsztatu" class="w-full h-full object-cover" />
+  </Hero>
+  <USPStrip features={[
+	{ icon: '⚡', title: 'Szybkość', description: 'Realizacje w krótkim terminie.' },
+	{ icon: '🎨', title: 'Design', description: 'Nowoczesne wzornictwo.' },
+	{ icon: '🔒', title: 'Bezpieczeństwo', description: 'Solidność i trwałość.' },
+	{ icon: '🤝', title: 'Współpraca', description: 'Indywidualne podejście.' },
+  ]} />
+  <section class="py-16">
+	<div class="container mx-auto">
+	  <FeaturedBuildCard {...featuredBuild} />
+	</div>
+  </section>
+  <ProcessSteps steps={processSteps} />
+  <section class="py-16 bg-steel/10">
+	<div class="container mx-auto grid md:grid-cols-3 gap-8">
+	  {testimonials.map(t => <TestimonialCard {...t} />)}
+	</div>
+  </section>
+  <section class="py-16 bg-accent text-offwhite text-center">
+	<div class="container mx-auto">
+	  <h2 class="text-heading text-3xl font-bold mb-4">Gotowy na swój chopper?</h2>
+	  <p class="text-body text-lg mb-8">Skontaktuj się z nami i zacznij spełniać motocyklowe marzenia!</p>
+	  <a href="/contact" class="btn btn-offwhite text-accent text-lg px-8 py-4 font-semibold">Rozpocznij projekt</a>
+	</div>
+  </section>
+  <Footer />
+  <script type="application/ld+json">{JSON.stringify(orgJsonLd)}</script>
+</BaseLayout>

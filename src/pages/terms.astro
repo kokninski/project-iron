@@ -1,0 +1,54 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+---
+
+<BaseLayout seo={{ title: 'Regulamin' }}>
+  <Header />
+  <main class="container mx-auto py-16 max-w-3xl">
+    <h1 class="text-heading text-3xl font-bold mb-8">Regulamin sklepu</h1>
+    <nav class="mb-8 text-sm text-accent flex flex-wrap gap-4">
+      <a href="#zakupy">1. Zakupy i płatności</a>
+      <a href="#realizacja">2. Realizacja zamówień</a>
+      <a href="#odpowiedzialnosc">3. Odpowiedzialność</a>
+      <a href="#kontakt">4. Kontakt</a>
+    </nav>
+    <section id="zakupy" class="mb-8">
+      <h2 class="text-xl font-semibold mb-2">1. Zakupy i płatności</h2>
+      <p>
+        Zakupy można realizować przez stronę internetową. Płatności obsługuje Stripe. Ceny podane są
+        w PLN i zawierają podatek VAT.
+      </p>
+    </section>
+    <section id="realizacja" class="mb-8">
+      <h2 class="text-xl font-semibold mb-2">2. Realizacja zamówień</h2>
+      <p>
+        Zamówienia realizowane są po zaksięgowaniu płatności. Czas realizacji zależy od rodzaju
+        produktu (merch: do 7 dni roboczych, projekty indywidualne: ustalane indywidualnie).
+      </p>
+    </section>
+    <section id="odpowiedzialnosc" class="mb-8">
+      <h2 class="text-xl font-semibold mb-2">3. Odpowiedzialność</h2>
+      <p>
+        Sprzedawca nie ponosi odpowiedzialności za opóźnienia wynikające z działania firm
+        kurierskich lub siły wyższej. W przypadku produktów na zamówienie prawo do odstąpienia od
+        umowy może być ograniczone.
+      </p>
+    </section>
+    <section id="kontakt" class="mb-8">
+      <h2 class="text-xl font-semibold mb-2">4. Kontakt</h2>
+      <p>
+        W sprawach związanych z regulaminem prosimy o kontakt: <a
+          href="mailto:kontakt@projectiron.pl"
+          class="text-accent underline">kontakt@projectiron.pl</a>
+      </p>
+    </section>
+    <nav class="mt-8 text-sm text-accent flex flex-wrap gap-4 border-t pt-4">
+      <a href="/privacy">Polityka prywatności</a>
+      <a href="/returns">Zwroty</a>
+      <a href="/cookies">Polityka cookies</a>
+    </nav>
+  </main>
+  <Footer />
+</BaseLayout>

@@ -1,0 +1,24 @@
+---
+// ProductCard: image, name, PLN price, Stripe link button
+interface Props {
+  image: string;
+  name: string;
+  pricePLN: number;
+  stripeUrl: string;
+}
+const { image, name, pricePLN, stripeUrl } = Astro.props;
+---
+
+<div class="card card-hover max-w-xs mx-auto flex flex-col items-center p-4">
+  <img src={image} alt={name} class="w-full h-48 object-cover rounded-lg mb-4" loading="lazy" />
+  <h3 class="text-heading text-lg font-semibold mb-2">{name}</h3>
+  <div class="text-accent text-xl font-bold mb-4">
+    {pricePLN.toLocaleString('pl-PL', { style: 'currency', currency: 'PLN' })}
+  </div>
+  <a
+    href={stripeUrl}
+    target="_blank"
+    rel="noopener noreferrer"
+    class="btn btn-primary w-full text-center">Kup teraz</a
+  >
+</div>
