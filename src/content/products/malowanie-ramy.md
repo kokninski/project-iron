@@ -1,6 +1,6 @@
 ---
 name: Malowanie ramy
-photo: /images/products/malowanie-ramy.jpg
+photo: /images/products/malowanie-ramy.png
 pricePLN: 600
 stripeLink: https://buy.stripe.com/test_malowanie_ramy
 ---
