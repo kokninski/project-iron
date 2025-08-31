@@ -1,0 +1,8 @@
+compatibility_date = "2025-01-01"
+
+# Environment variables are set in:
+# - .dev.vars for local development (gitignored)
+# - Cloudflare Pages project settings for production
+
+[env.production.vars]
+# Production vars will be set in Cloudflare Pages dashboard

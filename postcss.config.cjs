@@ -8,6 +8,6 @@ module.exports = {
 
     // Additional PostCSS plugins can be added here
     // Example: cssnano for production minification
-    ...(process.env.NODE_ENV === 'production' ? { cssnano: {} } : {})
+    ...(process.env.NODE_ENV === 'production' ? { cssnano: {} } : {}),
   },
-}
+};

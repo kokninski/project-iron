@@ -1,0 +1,41 @@
+{
+  // Formatting & Editor
+  "editor.defaultFormatter": "esbenp.prettier-vscode",
+  "editor.formatOnSave": true,
+  "editor.formatOnPaste": true,
+  "editor.codeActionsOnSave": {
+    "source.fixAll.eslint": "explicit",
+    "source.organizeImports": "explicit"
+  },
+
+  // Files
+  "files.eol": "\n",
+  "files.insertFinalNewline": true,
+  "files.trimTrailingWhitespace": true,
+  "editor.wordWrap": "on",
+  "editor.rulers": [100],
+
+  // ESLint
+  "eslint.validate": ["typescript", "javascript", "astro"],
+  "eslint.useFlatConfig": false,
+
+  // Tailwind CSS
+  "tailwindCSS.includeLanguages": {
+    "astro": "html"
+  },
+  "tailwindCSS.classAttributes": ["class", "className", "classList"],
+  "tailwindCSS.experimental.classRegex": [["class:list=\\{([^}]*)\\}", "'([^']*)'"]],
+
+  // Emmet
+  "emmet.includeLanguages": {
+    "astro": "html"
+  },
+
+  // TypeScript
+  "typescript.preferences.importModuleSpecifier": "relative",
+  "typescript.suggest.autoImports": true,
+
+  // Polish locale support
+  "cSpell.language": "en,pl",
+  "cSpell.dictionaries": ["polish"]
+}

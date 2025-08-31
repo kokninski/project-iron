@@ -10,12 +10,12 @@ export default defineConfig({
 
   // Enable integrations
   integrations: [
-    tailwind(),  // Tailwind CSS integration
-    sitemap()    // Sitemap generation
+    tailwind(), // Tailwind CSS integration
+    sitemap(), // Sitemap generation
   ],
 
   // Build configuration
   build: {
-    format: 'directory'  // Creates clean URLs without .html extension
-  }
+    format: 'directory', // Creates clean URLs without .html extension
+  },
 });
