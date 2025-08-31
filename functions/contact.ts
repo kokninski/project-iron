@@ -18,6 +18,7 @@ const ContactSchema = z.object({
   consent: z.boolean().refine(val => val === true, 'Consent is required'),
   turnstileToken: z.string().min(1, 'Turnstile token is required'),
 });
+const test = 'test';
 
 export const onRequestPost: PagesFunction = async context => {
   const { request, env } = context;
@@ -31,19 +32,19 @@ export const onRequestPost: PagesFunction = async context => {
   try {
     // Validate request method and content type
     if (request.method !== 'POST') {
-      return new Response(JSON.stringify({ error: 'Method not allowed' }), {
-        status: 405,
-        headers: { Allow: 'POST', 'Content-Type': 'application/json' },
-      });
+      return Response.json(
+        { error: 'Method not allowed' },
+        {
+          status: 405,
+          headers: { Allow: 'POST' },
+        },
+      );
     }
 
     // Check required environment variables
     if (!TURNSTILE_SECRET || !RESEND_API_KEY || !OWNER_EMAIL) {
       console.error('Missing required environment variables');
-      return new Response(JSON.stringify({ error: 'Server configuration error' }), {
-        status: 500,
-        headers: { 'Content-Type': 'application/json' },
-      });
+      return Response.json({ error: 'Server configuration error' }, { status: 500 });
     }
 
     // Parse and validate the request body
@@ -51,10 +52,7 @@ export const onRequestPost: PagesFunction = async context => {
     try {
       body = await request.json();
     } catch (parseError) {
-      return new Response(JSON.stringify({ error: 'Invalid JSON in request body' }), {
-        status: 400,
-        headers: { 'Content-Type': 'application/json' },
-      });
+      return Response.json({ error: 'Invalid JSON in request body' }, { status: 400 });
     }
 
     const parsedData = ContactSchema.parse(body);
@@ -76,19 +74,13 @@ export const onRequestPost: PagesFunction = async context => {
 
     if (!turnstileResponse.ok) {
       console.error('Turnstile API error:', turnstileResponse.status);
-      return new Response(JSON.stringify({ error: 'Verification service unavailable' }), {
-        status: 503,
-        headers: { 'Content-Type': 'application/json' },
-      });
+      return Response.json({ error: 'Verification service unavailable' }, { status: 503 });
     }
 
     const turnstileResult = await turnstileResponse.json();
     if (!turnstileResult.success) {
       console.warn('Turnstile verification failed:', turnstileResult['error-codes']);
-      return new Response(JSON.stringify({ error: 'Verification failed' }), {
-        status: 403,
-        headers: { 'Content-Type': 'application/json' },
-      });
+      return Response.json({ error: 'Verification failed' }, { status: 403 });
     }
 
     // Prepare email content
@@ -139,50 +131,35 @@ Sent at: ${new Date().toISOString()}
         status: emailResponse.status,
         error: errorText,
       });
-      return new Response(JSON.stringify({ error: 'Failed to send message' }), {
-        status: 500,
-        headers: { 'Content-Type': 'application/json' },
-      });
+      return Response.json({ error: 'Failed to send message' }, { status: 500 });
     }
 
     const emailResult = await emailResponse.json();
     console.log('Email sent successfully:', emailResult.id);
 
     // Return success response
-    return new Response(
-      JSON.stringify({
-        success: true,
-        message: 'Your message has been sent successfully',
-      }),
-      {
-        status: 200,
-        headers: { 'Content-Type': 'application/json' },
-      },
-    );
+    return Response.json({
+      success: true,
+      message: 'Your message has been sent successfully',
+    });
   } catch (error) {
     // Handle Zod validation errors specifically
     if (error instanceof z.ZodError) {
-      return new Response(
-        JSON.stringify({
+      return Response.json(
+        {
           error: 'Validation failed',
           details: error.errors,
-        }),
-        {
-          status: 400,
-          headers: { 'Content-Type': 'application/json' },
         },
+        { status: 400 },
       );
     }
 
     console.error('Unexpected error handling contact request:', error);
-    return new Response(
-      JSON.stringify({
-        error: 'An unexpected error occurred',
-      }),
+    return Response.json(
       {
-        status: 500,
-        headers: { 'Content-Type': 'application/json' },
+        error: 'An unexpected error occurred',
       },
+      { status: 500 },
     );
   }
 };
