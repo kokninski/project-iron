@@ -99,3 +99,12 @@ declare global {
     }): Response | Promise<Response>;
   }
 }
+
+declare namespace NodeJS {
+  interface ProcessEnv {
+    TURNSTILE_SECRET: string;
+    TURNSTILE_SITE_KEY: string;
+    RESEND_API_KEY: string;
+    OWNER_EMAIL: string;
+  }
+}
