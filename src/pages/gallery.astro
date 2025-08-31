@@ -9,9 +9,9 @@ const builds = [
   {
     name: 'Black Iron',
     photos: [
-      { src: '/images/builds/black-iron-1.jpg', tags: ['frames'] },
-      // { src: '/images/builds/black-iron-2.jpg', tags: ['paint'] },
-      // { src: '/images/builds/black-iron-3.jpg', tags: ['details'] },
+      { src: '/images/builds/black-iron0.png', tags: ['frames'] },
+      { src: '/images/builds/black-iron2.png', tags: ['paint'] },
+      { src: '/images/builds/black-iron3.png', tags: ['frames'] },
       // { src: '/images/builds/black-iron-4.jpg', tags: ['frames'] },
       // { src: '/images/builds/black-iron-5.jpg', tags: ['before-after'] },
       { src: '/images/builds/aztec-bike1.png', tags: ['frames', 'paint'] },
@@ -19,14 +19,16 @@ const builds = [
       { src: '/images/builds/moro-bike0.png', tags: ['frames', 'paint'] },
       { src: '/images/builds/moro-bike1.png', tags: ['frames', 'paint'] },
       { src: '/images/builds/pink-bike0.png', tags: ['frames', 'paint'] },
-      { src: '/images/builds/violett-bike0.png', tags: ['frames', 'paint'] },
+      { src: '/images/builds/pink-bike1.png', tags: ['frames', 'paint'] },
+      { src: '/images/builds/pink-bike2.png', tags: ['details', 'paint'] },
+      { src: '/images/builds/violet-bike0.png', tags: ['frames', 'paint'] },
       { src: '/images/builds/aztec-bike0.png', tags: ['frames', 'paint'] },
     ],
   },
   // Add more builds here if needed
 ];
-const allImages = builds.flatMap((b) => b.photos.map((p) => ({ ...p, build: b.name })));
-const allTags = Array.from(new Set(allImages.flatMap((img) => img.tags))).sort();
+const allImages = builds.flatMap(b => b.photos.map(p => ({ ...p, build: b.name })));
+const allTags = Array.from(new Set(allImages.flatMap(img => img.tags))).sort();
 ---
 
 <BaseLayout>
@@ -52,25 +54,106 @@ const allTags = Array.from(new Set(allImages.flatMap((img) => img.tags))).sort()
           width: 100%;
           border-radius: 0.75rem;
           box-shadow: 0 2px 8px #0001;
-          transition: box-shadow 0.2s;
+          transition:
+            box-shadow 0.2s,
+            transform 0.2s;
+          cursor: pointer;
         }
         .masonry-gallery img:hover {
           box-shadow: 0 4px 16px #0002;
+          transform: scale(1.03);
+        }
+        .gallery-overlay {
+          position: fixed;
+          inset: 0;
+          background: rgba(0, 0, 0, 0.85);
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          z-index: 1000;
+        }
+        .gallery-overlay img {
+          max-width: 90vw;
+          max-height: 80vh;
+          border-radius: 1rem;
+          box-shadow: 0 8px 32px #0008;
+        }
+        .gallery-overlay[hidden] {
+          display: none;
+        }
+        .gallery-overlay__close {
+          position: absolute;
+          top: 2rem;
+          right: 2rem;
+          background: none;
+          border: none;
+          color: #fff;
+          font-size: 2rem;
+          cursor: pointer;
+          z-index: 1001;
         }
       </style>
       {
-        allImages.map((img) => (
+        allImages.map(img => (
           <img
             src={img.src}
             alt={img.build}
             data-gallery-item
             data-tags={img.tags.join(',')}
             class="shadow"
+            tabindex="0"
+            loading="lazy"
           />
         ))
       }
+      <div class="gallery-overlay" id="gallery-overlay" hidden>
+        <button
+          class="gallery-overlay__close"
+          id="gallery-overlay-close"
+          aria-label="Zamknij powiększenie">&times;</button
+        >
+        <img id="gallery-overlay-img" src="" alt="Powiększone zdjęcie" />
+      </div>
     </div>
     <p class="mt-12 text-steel">Więcej zdjęć już wkrótce!</p>
   </main>
   <Footer />
 </BaseLayout>
+<script is:inline>
+  window.addEventListener('DOMContentLoaded', () => {
+    const images = document.querySelectorAll('.masonry-gallery img[data-gallery-item]');
+    const overlay = document.getElementById('gallery-overlay');
+    const overlayImg = document.getElementById('gallery-overlay-img');
+    const overlayClose = document.getElementById('gallery-overlay-close');
+    images.forEach(img => {
+      img.addEventListener('click', () => {
+        overlayImg.src = img.src;
+        overlayImg.alt = img.alt;
+        overlay.removeAttribute('hidden');
+      });
+      img.addEventListener('keydown', e => {
+        if (e.key === 'Enter' || e.key === ' ') {
+          overlayImg.src = img.src;
+          overlayImg.alt = img.alt;
+          overlay.removeAttribute('hidden');
+        }
+      });
+    });
+    overlayClose.addEventListener('click', () => {
+      overlay.setAttribute('hidden', '');
+      overlayImg.src = '';
+    });
+    overlay.addEventListener('click', e => {
+      if (e.target === overlay) {
+        overlay.setAttribute('hidden', '');
+        overlayImg.src = '';
+      }
+    });
+    window.addEventListener('keydown', e => {
+      if (!overlay.hasAttribute('hidden') && (e.key === 'Escape' || e.key === 'Esc')) {
+        overlay.setAttribute('hidden', '');
+        overlayImg.src = '';
+      }
+    });
+  });
+</script>

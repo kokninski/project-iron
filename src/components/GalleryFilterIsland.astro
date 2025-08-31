@@ -3,7 +3,7 @@
 const { tags = [], activeTag = 'all' } = Astro.props;
 ---
 
-<div class="flex flex-wrap gap-2 mb-8 justify-center">
+<div class="flex flex-wrap gap-2 mb-8 justify-center" filter-bar>
   <button class="btn btn-secondary px-4 py-2" data-tag="all" aria-pressed={activeTag === 'all'}
     >Wszystkie</button
   >
@@ -15,16 +15,18 @@ const { tags = [], activeTag = 'all' } = Astro.props;
     ))
   }
 </div>
+
 <script type="module">
-  const filterBar = document.currentScript.parentElement;
+  const filterBar = document.querySelectorAll('[filter-bar]')[0];
+  // console.log(filterBar);
   const buttons = filterBar.querySelectorAll('button[data-tag]');
   const allImages = document.querySelectorAll('[data-gallery-item]');
-  buttons.forEach((btn) => {
+  buttons.forEach(btn => {
     btn.addEventListener('click', () => {
       const tag = btn.getAttribute('data-tag');
-      buttons.forEach((b) => b.setAttribute('aria-pressed', 'false'));
+      buttons.forEach(b => b.setAttribute('aria-pressed', 'false'));
       btn.setAttribute('aria-pressed', 'true');
-      allImages.forEach((img) => {
+      allImages.forEach(img => {
         if (tag === 'all' || img.dataset.tags.split(',').includes(tag)) {
           img.style.display = '';
         } else {
