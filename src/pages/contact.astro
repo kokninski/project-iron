@@ -52,7 +52,7 @@ const turnstileSiteKey = import.meta.env.PUBLIC_TURNSTILE_SITE_KEY;
           > *</label
         >
       </div>
-      <div class="turnstile" data-sitekey={turnstileSiteKey}></div>
+      <div class="cf-turnstile" data-sitekey={turnstileSiteKey}></div>
       <button type="submit" class="btn btn-primary w-full">
         <span class="submit-text">Wyślij wiadomość</span>
         <span class="loading-text hidden">Wysyłanie...</span>
@@ -63,6 +63,7 @@ const turnstileSiteKey = import.meta.env.PUBLIC_TURNSTILE_SITE_KEY;
   </main>
   <Footer />
 </BaseLayout>
+<script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
 
 <script>
   const form = document.getElementById('contact-form');
@@ -98,7 +99,7 @@ const turnstileSiteKey = import.meta.env.PUBLIC_TURNSTILE_SITE_KEY;
       }
 
       try {
-        const response = await fetch('/api/contact', {
+        const response = await fetch('/contact', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
