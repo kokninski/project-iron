@@ -42,6 +42,17 @@ const navLinks: NavItem[] = [
           </li>
         ))
       }
+      <!-- Dark/Light mode switch -->
+      <li role="none">
+        <button
+          id="theme-toggle"
+          class="ml-4 px-2 py-1 rounded focus-ring border border-steel/20 bg-transparent text-steel hover:text-accent transition-colors duration-150"
+          aria-label="Przełącz tryb ciemny/jasny"
+        >
+          <span class="dark:hidden">🌙</span>
+          <span class="hidden dark:inline">☀️</span>
+        </button>
+      </li>
     </ul>
 
     <!-- CTA button (desktop) -->
@@ -162,5 +173,28 @@ const navLinks: NavItem[] = [
         }
       }
     });
+
+    // Dark/Light mode toggle logic
+    const themeToggle = document.getElementById('theme-toggle');
+    if (themeToggle) {
+      themeToggle.addEventListener('click', () => {
+        const html = document.documentElement;
+        if (html.classList.contains('dark')) {
+          html.classList.remove('dark');
+          localStorage.setItem('theme', 'light');
+        } else {
+          html.classList.add('dark');
+          localStorage.setItem('theme', 'dark');
+        }
+      });
+      // On load, set theme from localStorage
+      if (
+        localStorage.getItem('theme') === 'dark' ||
+        (!localStorage.getItem('theme') &&
+          window.matchMedia('(prefers-color-scheme: dark)').matches)
+      ) {
+        document.documentElement.classList.add('dark');
+      }
+    }
   </script>
 </header>

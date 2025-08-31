@@ -27,6 +27,7 @@ import '@fontsource/oswald/700.css';
 
 // Import Tailwind CSS
 import '../styles/tailwind.css';
+import { buildJsonLd } from '../lib/seo';
 
 // Props for the layout
 interface Props {
@@ -55,6 +56,25 @@ const {
 // Get current URL for canonical and OG URL
 const currentUrl = new URL(Astro.url.pathname, Astro.site);
 const canonicalUrl = canonical || currentUrl.href;
+
+const orgJsonLd = buildJsonLd('Organization', {
+  name: 'Project Iron',
+  url: 'https://YOUR_DOMAIN',
+  logo: '/favicon.svg',
+  sameAs: [
+    'https://facebook.com/',
+    'https://instagram.com/',
+    'https://x.com/',
+    'https://youtube.com/'
+  ],
+  address: {
+    '@type': 'PostalAddress',
+    streetAddress: 'ul. Przykładowa 123',
+    addressLocality: 'Warszawa',
+    postalCode: '00-000',
+    addressCountry: 'PL',
+  },
+});
 ---
 
 <!doctype html>
@@ -110,6 +130,7 @@ const canonicalUrl = canonical || currentUrl.href;
 
     <!-- Additional head content slot -->
     <slot name="head" />
+    <script type="application/ld+json">{JSON.stringify(orgJsonLd)}</script>
   </head>
 
   <body class={`font-sans bg-offwhite text-charcoal antialiased ${bodyClass}`}>
