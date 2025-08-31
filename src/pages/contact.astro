@@ -2,19 +2,16 @@
 import BaseLayout from '../layouts/BaseLayout.astro';
 import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
+
+// Get Turnstile site key from environment
+const turnstileSiteKey = import.meta.env.PUBLIC_TURNSTILE_SITE_KEY;
 ---
 
 <BaseLayout>
   <Header />
   <main class="container mx-auto py-16">
     <h1 class="text-heading text-4xl font-bold mb-8">Kontakt</h1>
-    <form
-      id="contact-form"
-      method="POST"
-      action="/functions/contact.ts"
-      class="space-y-6 max-w-xl mx-auto"
-      novalidate
-    >
+    <form id="contact-form" method="POST" class="space-y-6 max-w-xl mx-auto" novalidate>
       <div>
         <label for="name" class="block font-semibold mb-1">Imię i nazwisko *</label>
         <input
@@ -55,43 +52,129 @@ import Footer from '../components/Footer.astro';
           > *</label
         >
       </div>
-      <div>
-        <!-- Cloudflare Turnstile widget placeholder -->
-        <div
-          id="turnstile-widget"
-          class="mb-4"
-          data-sitekey={import.meta.env.PUBLIC_TURNSTILE_SITE_KEY}
-        >
-        </div>
-      </div>
-      <button type="submit" class="btn btn-primary w-full">Wyślij wiadomość</button>
+
+      {
+        turnstileSiteKey && (
+          <div>
+            <label class="block font-semibold mb-2">Weryfikacja bezpieczeństwa *</label>
+            <div class="cf-turnstile" data-sitekey={turnstileSiteKey} data-theme="light" />
+          </div>
+        )
+      }
+
+      <button type="submit" class="btn btn-primary w-full" disabled>
+        <span class="submit-text">Wyślij wiadomość</span>
+        <span class="loading-text hidden">Wysyłanie...</span>
+      </button>
       <div id="form-status" class="mt-4 text-center text-base font-semibold" aria-live="polite">
       </div>
     </form>
-    <script type="module">
+
+    {
+      turnstileSiteKey && (
+        <script src="https://challenges.cloudflare.com/turnstile/v0/api.js" defer />
+      )
+    }
+
+    <script type="module" define:vars={{ turnstileSiteKey }}>
       const form = document.getElementById('contact-form');
       const status = document.getElementById('form-status');
-      form?.addEventListener('submit', async (e) => {
+      const submitBtn = form?.querySelector('button[type="submit"]');
+      const submitText = submitBtn?.querySelector('.submit-text');
+      const loadingText = submitBtn?.querySelector('.loading-text');
+
+      // Enable submit button when Turnstile is ready (if configured)
+      if (turnstileSiteKey) {
+        window.turnstileCallback = function (token) {
+          if (submitBtn) {
+            submitBtn.disabled = false;
+          }
+        };
+
+        // Configure Turnstile callback
+        window.onloadTurnstileCallback = function () {
+          if (window.turnstile) {
+            window.turnstile.render('.cf-turnstile', {
+              sitekey: turnstileSiteKey,
+              callback: window.turnstileCallback,
+            });
+          }
+        };
+      } else {
+        // Enable submit if no Turnstile configured (development)
+        if (submitBtn) {
+          submitBtn.disabled = false;
+        }
+      }
+
+      form?.addEventListener('submit', async e => {
         e.preventDefault();
+
+        if (!submitBtn || !submitText || !loadingText) return;
+
+        // Update UI
+        submitBtn.disabled = true;
+        submitText.classList.add('hidden');
+        loadingText.classList.remove('hidden');
         status.textContent = '';
-        const fd = new FormData(form);
+
+        const formData = new FormData(form);
+
+        // Get Turnstile token if available
+        let turnstileToken = '';
+        if (turnstileSiteKey && window.turnstile) {
+          const turnstileElement = form.querySelector('.cf-turnstile');
+          if (turnstileElement) {
+            turnstileToken = window.turnstile.getResponse(turnstileElement);
+          }
+        }
+
+        // Prepare request data
+        const requestData = {
+          name: formData.get('name'),
+          email: formData.get('email'),
+          phone: formData.get('phone') || '',
+          message: formData.get('message'),
+          consent: formData.get('consent') === 'on',
+          turnstileToken: turnstileToken || 'development-bypass',
+        };
+
         try {
-          const res = await fetch(form.action, {
+          const res = await fetch('/functions/contact', {
             method: 'POST',
-            body: fd,
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(requestData),
           });
+
+          const data = await res.json().catch(() => ({}));
+
           if (res.ok) {
             form.reset();
             status.textContent = 'Dziękujemy! Twoja wiadomość została wysłana.';
-            status.className = 'mt-4 text-center text-green-700 font-semibold';
+            status.className = 'mt-4 text-center text-success font-semibold';
+
+            // Reset Turnstile
+            if (turnstileSiteKey && window.turnstile) {
+              window.turnstile.reset();
+              submitBtn.disabled = true;
+            }
           } else {
-            const data = await res.json().catch(() => ({}));
             status.textContent = data.error || 'Wystąpił błąd podczas wysyłania wiadomości.';
-            status.className = 'mt-4 text-center text-red-700 font-semibold';
+            status.className = 'mt-4 text-center text-danger font-semibold';
           }
-        } catch {
+        } catch (error) {
+          console.error('Form submission error:', error);
           status.textContent = 'Nie udało się połączyć z serwerem.';
-          status.className = 'mt-4 text-center text-red-700 font-semibold';
+          status.className = 'mt-4 text-center text-danger font-semibold';
+        } finally {
+          // Reset UI
+          submitText.classList.remove('hidden');
+          loadingText.classList.add('hidden');
+          if (!turnstileSiteKey) {
+            submitBtn.disabled = false;
+          }
         }
       });
     </script>
