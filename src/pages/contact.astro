@@ -19,7 +19,7 @@ const turnstileSiteKey = import.meta.env.PUBLIC_TURNSTILE_SITE_KEY;
           name="name"
           type="text"
           required
-          class="input w-full"
+          class="input w-full rounded-lg"
           autocomplete="name"
         />
       </div>
@@ -30,17 +30,24 @@ const turnstileSiteKey = import.meta.env.PUBLIC_TURNSTILE_SITE_KEY;
           name="email"
           type="email"
           required
-          class="input w-full"
+          class="input w-full rounded-lg"
           autocomplete="email"
         />
       </div>
       <div>
         <label for="phone" class="block font-semibold mb-1">Telefon</label>
-        <input id="phone" name="phone" type="tel" class="input w-full" autocomplete="tel" />
+        <input
+          id="phone"
+          name="phone"
+          type="tel"
+          class="input w-full rounded-lg"
+          autocomplete="tel"
+        />
       </div>
       <div>
         <label for="message" class="block font-semibold mb-1">Wiadomość *</label>
-        <textarea id="message" name="message" required rows="5" class="input w-full"></textarea>
+        <textarea id="message" name="message" required rows="5" class="input w-full rounded-lg"
+        ></textarea>
       </div>
       <div class="flex items-start gap-2">
         <input id="consent" name="consent" type="checkbox" required class="mt-1" />
@@ -53,7 +60,7 @@ const turnstileSiteKey = import.meta.env.PUBLIC_TURNSTILE_SITE_KEY;
         >
       </div>
       <div class="cf-turnstile" data-sitekey={turnstileSiteKey}></div>
-      <button type="submit" class="btn btn-primary w-full">
+      <button type="submit" class="btn btn-primary w-full rounded-lg">
         <span class="submit-text">Wyślij wiadomość</span>
         <span class="loading-text hidden">Wysyłanie...</span>
       </button>
