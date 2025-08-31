@@ -144,11 +144,11 @@ const navLinks: NavItem[] = [
     btn?.addEventListener('click', openMenu);
     closeBtn?.addEventListener('click', closeMenu);
     // Close on Escape
-    menu?.addEventListener('keydown', (e) => {
+    menu?.addEventListener('keydown', e => {
       if (e.key === 'Escape') closeMenu();
     });
     // Trap focus inside menu
-    menu?.addEventListener('keydown', (e) => {
+    menu?.addEventListener('keydown', e => {
       if (e.key === 'Tab') {
         const focusable = menu.querySelectorAll('a,button');
         const first = focusable[0];
