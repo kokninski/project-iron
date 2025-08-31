@@ -1,14 +1,14 @@
 ---
 
-import BaseLayout from '../layouts/BaseLayout.astro';
+import FeaturedBuildCard from '../components/FeaturedBuildCard.astro';
+import Footer from '../components/Footer.astro';
 import Header from '../components/Header.astro';
 import Hero from '../components/Hero.astro';
-import USPStrip from '../components/USPStrip.astro';
-import FeaturedBuildCard from '../components/FeaturedBuildCard.astro';
 import ProcessSteps from '../components/ProcessSteps.astro';
 import TestimonialCard from '../components/TestimonialCard.astro';
-import Footer from '../components/Footer.astro';
-import { ogImage, buildJsonLd } from '../lib/seo';
+import USPStrip from '../components/USPStrip.astro';
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { buildJsonLd, ogImage } from '../lib/seo';
 
 const featuredBuild = {
   images: [
@@ -79,11 +79,26 @@ const orgJsonLd = buildJsonLd('Organization', {
 	postalCode: '00-000',
 	addressCountry: 'PL',
   },
-  contactPoint: {
-	'@type': 'ContactPoint',
-	telephone: '+48 123 456 789',
-	contactType: 'customer service',
-	email: 'kontakt@projectiron.pl',
+});
+
+const localBusinessJsonLd = buildJsonLd('LocalBusiness', {
+  name: 'Project Iron',
+  image: '/favicon.svg',
+  '@id': 'https://YOUR_DOMAIN',
+  url: 'https://YOUR_DOMAIN',
+  telephone: '+48 123 456 789',
+  address: {
+    '@type': 'PostalAddress',
+    streetAddress: 'ul. Przykładowa 123',
+    addressLocality: 'Warszawa',
+    postalCode: '00-000',
+    addressCountry: 'PL',
+  },
+  priceRange: '$$$',
+  geo: {
+    '@type': 'GeoCoordinates',
+    latitude: '52.2297',
+    longitude: '21.0122',
   },
 });
 
@@ -129,4 +144,5 @@ const orgJsonLd = buildJsonLd('Organization', {
   </section>
   <Footer />
   <script type="application/ld+json">{JSON.stringify(orgJsonLd)}</script>
+  <script type="application/ld+json">{JSON.stringify(localBusinessJsonLd)}</script>
 </BaseLayout>
