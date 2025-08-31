@@ -1,10 +1,7 @@
 /** @type {import('tailwindcss').Config} */
 module.exports = {
   // Content paths for purging unused CSS
-  content: [
-    './src/**/*.{astro,html,js,jsx,md,mdx,svelte,ts,tsx,vue}',
-    './public/**/*.html',
-  ],
+  content: ['./src/**/*.{astro,html,js,jsx,md,mdx,svelte,ts,tsx,vue}', './public/**/*.html'],
 
   theme: {
     extend: {
@@ -21,10 +18,10 @@ module.exports = {
 
       // Font families
       fontFamily: {
-        'inter': ['Inter', 'sans-serif'],
-        'oswald': ['Oswald', 'sans-serif'],
-        'sans': ['Inter', 'ui-sans-serif', 'system-ui', '-apple-system', 'sans-serif'],
-        'display': ['Oswald', 'ui-sans-serif', 'system-ui', '-apple-system', 'sans-serif'],
+        inter: ['Inter', 'sans-serif'],
+        oswald: ['Oswald', 'sans-serif'],
+        sans: ['Inter', 'ui-sans-serif', 'system-ui', '-apple-system', 'sans-serif'],
+        display: ['Oswald', 'ui-sans-serif', 'system-ui', '-apple-system', 'sans-serif'],
       },
 
       // Container settings
@@ -42,16 +39,18 @@ module.exports = {
 
     // Mobile-first responsive breakpoints
     screens: {
-      'xs': '475px',
-      'sm': '640px',
-      'md': '768px',
-      'lg': '1024px',
-      'xl': '1280px',
+      xs: '475px',
+      sm: '640px',
+      md: '768px',
+      lg: '1024px',
+      xl: '1280px',
       '2xl': '1536px',
     },
   },
 
+  darkMode: 'class',
+
   plugins: [
     // Add any additional Tailwind plugins here
   ],
-}
+};
