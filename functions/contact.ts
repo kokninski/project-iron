@@ -1,5 +1,4 @@
 import type { PagesFunction } from '@cloudflare/workers-types';
-import { Response as CfResponse } from '@cloudflare/workers-types';
 import { z } from 'zod';
 
 // Helper to get env variable from Cloudflare env or Astro import.meta.env
@@ -32,7 +31,7 @@ export const onRequestPost: PagesFunction = async context => {
   try {
     // Validate request method and content type
     if (request.method !== 'POST') {
-      return new CfResponse(JSON.stringify({ error: 'Method not allowed' }), {
+      return new Response(JSON.stringify({ error: 'Method not allowed' }), {
         status: 405,
         headers: { Allow: 'POST', 'Content-Type': 'application/json' },
       });
@@ -41,7 +40,7 @@ export const onRequestPost: PagesFunction = async context => {
     // Check required environment variables
     if (!TURNSTILE_SECRET || !RESEND_API_KEY || !OWNER_EMAIL) {
       console.error('Missing required environment variables');
-      return new CfResponse(JSON.stringify({ error: 'Server configuration error' }), {
+      return new Response(JSON.stringify({ error: 'Server configuration error' }), {
         status: 500,
         headers: { 'Content-Type': 'application/json' },
       });
@@ -52,7 +51,7 @@ export const onRequestPost: PagesFunction = async context => {
     try {
       body = await request.json();
     } catch (parseError) {
-      return new CfResponse(JSON.stringify({ error: 'Invalid JSON in request body' }), {
+      return new Response(JSON.stringify({ error: 'Invalid JSON in request body' }), {
         status: 400,
         headers: { 'Content-Type': 'application/json' },
       });
@@ -77,7 +76,7 @@ export const onRequestPost: PagesFunction = async context => {
 
     if (!turnstileResponse.ok) {
       console.error('Turnstile API error:', turnstileResponse.status);
-      return new CfResponse(JSON.stringify({ error: 'Verification service unavailable' }), {
+      return new Response(JSON.stringify({ error: 'Verification service unavailable' }), {
         status: 503,
         headers: { 'Content-Type': 'application/json' },
       });
@@ -86,7 +85,7 @@ export const onRequestPost: PagesFunction = async context => {
     const turnstileResult = await turnstileResponse.json();
     if (!turnstileResult.success) {
       console.warn('Turnstile verification failed:', turnstileResult['error-codes']);
-      return new CfResponse(JSON.stringify({ error: 'Verification failed' }), {
+      return new Response(JSON.stringify({ error: 'Verification failed' }), {
         status: 403,
         headers: { 'Content-Type': 'application/json' },
       });
@@ -140,7 +139,7 @@ Sent at: ${new Date().toISOString()}
         status: emailResponse.status,
         error: errorText,
       });
-      return new CfResponse(JSON.stringify({ error: 'Failed to send message' }), {
+      return new Response(JSON.stringify({ error: 'Failed to send message' }), {
         status: 500,
         headers: { 'Content-Type': 'application/json' },
       });
@@ -150,7 +149,7 @@ Sent at: ${new Date().toISOString()}
     console.log('Email sent successfully:', emailResult.id);
 
     // Return success response
-    return new CfResponse(
+    return new Response(
       JSON.stringify({
         success: true,
         message: 'Your message has been sent successfully',
@@ -163,7 +162,7 @@ Sent at: ${new Date().toISOString()}
   } catch (error) {
     // Handle Zod validation errors specifically
     if (error instanceof z.ZodError) {
-      return new CfResponse(
+      return new Response(
         JSON.stringify({
           error: 'Validation failed',
           details: error.errors,
@@ -176,7 +175,7 @@ Sent at: ${new Date().toISOString()}
     }
 
     console.error('Unexpected error handling contact request:', error);
-    return new CfResponse(
+    return new Response(
       JSON.stringify({
         error: 'An unexpected error occurred',
       }),
