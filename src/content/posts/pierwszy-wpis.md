@@ -5,7 +5,7 @@ tags:
   - proces
   - realizacja
   - inspiracje
-coverImage: '/images/blog/build-process.jpg'
+coverImage: '/images/builds/chameleon-bike0.png'
 excerpt: 'Poznaj kulisy powstawania naszych unikalnych projektów – od pomysłu do gotowego dzieła.'
 author: 'Krzysztof Nowak'
 ---
