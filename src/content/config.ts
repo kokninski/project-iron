@@ -39,8 +39,47 @@ const products = defineCollection({
   }),
 });
 
+// Home collection
+const homeSchema = z.object({
+  hero: z.object({
+    title: z.string().min(3),
+    subtitle: z.string().min(3),
+    backgroundImage: z.string().url().or(z.string().startsWith('/')),
+    primaryCta: z.object({ label: z.string(), href: z.string() }),
+    secondaryCta: z.object({ label: z.string(), href: z.string() }).optional(),
+  }),
+  featuredBuild: z.object({
+    slug: z.string().min(1), // must match a file in content/builds
+    testimonial: z.string().optional(),
+    author: z.string().min(2).optional(),
+  }),
+  testimonials: z
+    .array(
+      z.object({
+        quote: z.string().min(3),
+        author: z.string().min(2),
+        role: z.string().optional(),
+        avatarUrl: z.string().url().or(z.string().startsWith('/')).optional(),
+      }),
+    )
+    .default([]),
+  ctaBand: z.object({
+    text: z.string(),
+    primaryCta: z.object({ label: z.string(), href: z.string() }),
+  }),
+  latestBlog: z
+    .object({
+      enabled: z.boolean().default(true),
+      limit: z.number().int().min(1).max(12).default(3),
+    })
+    .default({ enabled: true, limit: 3 }),
+});
+
+const home = defineCollection({ type: 'content', schema: homeSchema });
+
 export const collections = {
   posts,
   builds,
   products,
+  home,
 };

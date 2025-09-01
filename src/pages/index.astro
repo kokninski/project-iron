@@ -1,5 +1,6 @@
 ---
 
+
 import FeaturedBuildCard from '../components/FeaturedBuildCard.astro';
 import Footer from '../components/Footer.astro';
 import Header from '../components/Header.astro';
@@ -10,28 +11,27 @@ import USPStrip from '../components/USPStrip.astro';
 import BaseLayout from '../layouts/BaseLayout.astro';
 import { buildJsonLd, ogImage } from '../lib/seo';
 
-const featuredBuild = {
-  images: [
-	{ src: '/images/builds/black-iron-1.jpg' },
-	{ src: '/images/builds/black-iron-2.jpg' },
-	{ src: '/images/builds/black-iron-3.jpg' },
-	{ src: '/images/builds/black-iron-4.jpg' },
-	{ src: '/images/builds/black-iron-5.jpg' },
-  ],
-  title: 'Black Iron',
-  specs: [
-	{ label: 'Stal konstrukcyjna', value: 'S355' },
-	{ label: 'Wykończenie', value: 'czarny mat' },
-	{ label: 'Wysokość', value: '2,4 m' },
-	{ label: 'Szerokość', value: '1,2 m' },
-	{ label: 'Waga', value: '180 kg' },
-  ],
-  testimonial: {
-	quote: 'Realizacja przerosła nasze oczekiwania – solidność i estetyka na najwyższym poziomie.',
-	author: 'Anna Zielińska',
-	role: 'Klientka indywidualna',
-  },
-};
+// Removed duplicate import of CollectionEntry
+import { getCollection, getEntryBySlug, type CollectionEntry } from 'astro:content';
+
+const home = await getEntryBySlug('home', 'index');
+const data = home && 'data' in home ? (home as { data: any }).data : undefined;
+
+console.log('Home data:', data);
+
+const builds = await getCollection('builds');
+const featured: CollectionEntry<'builds'> | undefined = data ? builds.find(b => b.slug === data.featuredBuild.slug) : undefined;
+if (!featured && data?.featuredBuild?.slug) console.warn('Featured build not found:', data.featuredBuild.slug);
+
+let latestPosts: CollectionEntry<'posts'>[] = [];
+if (data?.latestBlog?.enabled) {
+  const posts = await getCollection('posts');
+  latestPosts = posts
+    .map(p => ({ ...p, _date: (typeof p.data.date === 'string' ? new Date(p.data.date) : p.data.date as Date) }))
+    .filter(p => p._date instanceof Date && !isNaN(Number(p._date)))
+    .sort((a, b) => (b._date as Date).getTime() - (a._date as Date).getTime())
+    .slice(0, data.latestBlog.limit);
+}
 
 const processSteps = [
   { icon: '💡', title: 'Pomysł', description: 'Wspólnie omawiamy Twoją wizję i potrzeby.' },
@@ -39,27 +39,6 @@ const processSteps = [
   { icon: '⚒️', title: 'Budowa', description: 'Ręcznie wykonujemy każdy element z dbałością o detale.' },
   { icon: '🧪', title: 'Testy', description: 'Sprawdzamy jakość i bezpieczeństwo gotowego choppera.' },
   { icon: '🚚', title: 'Dostawa', description: 'Dostarczamy gotowy motocykl pod wskazany adres.' },
-];
-
-const testimonials = [
-  {
-	quote: 'To nie tylko motocykl, to spełnienie marzeń! Polecam każdemu pasjonatowi.',
-	author: 'Marek Kwiatkowski',
-	role: 'Klient',
-	avatarUrl: '/images/avatars/marek.jpg',
-  },
-  {
-	quote: 'Profesjonalizm, kontakt i jakość na najwyższym poziomie.',
-	author: 'Ewa Nowicka',
-	role: 'Klientka',
-	avatarUrl: '/images/avatars/ewa.jpg',
-  },
-  {
-	quote: 'Chopper wygląda i jeździ lepiej niż się spodziewałem. Dziękuję!',
-	author: 'Tomasz Zieliński',
-	role: 'Klient',
-	avatarUrl: '/images/avatars/tomek.jpg',
-  },
 ];
 
 const orgJsonLd = buildJsonLd('Organization', {
@@ -111,37 +90,65 @@ const localBusinessJsonLd = buildJsonLd('LocalBusiness', {
 }}>
   <Header />
   <Hero
-	headline="Ręcznie budowane choppery z Polski"
-	subhead="Indywidualne motocykle na zamówienie. Poznaj nasz proces, zobacz realizacje i opinie klientów."
-	primaryCta={{ label: 'Rozpocznij projekt', href: '/contact' }}
-	secondaryCta={{ label: 'Zobacz realizacje', href: '/custom-builds' }}
+    headline={data.hero.title}
+    subhead={data.hero.subtitle}
+    primaryCta={data.hero.primaryCta}
+    secondaryCta={data.hero.secondaryCta}
   >
-	<img slot="bg" src="/images/hero-bg.jpg" alt="Chopper na tle warsztatu" class="w-full h-full object-cover" />
+    <img slot="bg" src={data.hero.backgroundImage} alt={data.hero.title} class="w-full h-full object-cover" />
   </Hero>
   <USPStrip features={[
-	{ icon: '⚡', title: 'Szybkość', description: 'Realizacje w krótkim terminie.' },
-	{ icon: '🎨', title: 'Design', description: 'Nowoczesne wzornictwo.' },
-	{ icon: '🔒', title: 'Bezpieczeństwo', description: 'Solidność i trwałość.' },
-	{ icon: '🤝', title: 'Współpraca', description: 'Indywidualne podejście.' },
+    { icon: '⚡', title: 'Szybkość', description: 'Realizacje w krótkim terminie.' },
+    { icon: '🎨', title: 'Design', description: 'Nowoczesne wzornictwo.' },
+    { icon: '🔒', title: 'Bezpieczeństwo', description: 'Solidność i trwałość.' },
+    { icon: '🤝', title: 'Współpraca', description: 'Indywidualne podejście.' },
   ]} />
-  <section class="py-16">
-	<div class="container mx-auto">
-	  <FeaturedBuildCard {...featuredBuild} />
-	</div>
-  </section>
+  {featured && (
+    <section class="py-16">
+      <div class="container mx-auto">
+        <FeaturedBuildCard
+          images={featured.data.photos?.map(src => ({ src })) ?? []}
+          title={featured.data.name}
+          specs={featured.data.specs?.map(s => ({ label: s })) ?? []}
+          testimonial={data?.featuredBuild?.testimonial ? { quote: data.featuredBuild.testimonial, author: data.featuredBuild.author } : featured.data.clientTestimonial}
+        />
+      </div>
+    </section>
+  )}
   <ProcessSteps steps={processSteps} />
-  <section class="py-16 bg-steel/10">
-	<div class="container mx-auto grid md:grid-cols-3 gap-8">
-	  {testimonials.map(t => <TestimonialCard {...t} />)}
-	</div>
-  </section>
-  <section class="py-16 bg-accent text-offwhite text-center">
-	<div class="container mx-auto">
-	  <h2 class="text-heading text-3xl font-bold mb-4">Gotowy na swój chopper?</h2>
-	  <p class="text-body text-lg mb-8">Skontaktuj się z nami i zacznij spełniać motocyklowe marzenia!</p>
-	  <a href="/contact" class="btn btn-offwhite text-accent text-lg px-8 py-4 font-semibold">Rozpocznij projekt</a>
-	</div>
-  </section>
+  {Array.isArray(data?.testimonials) && data.testimonials.length > 0 && (
+    <section class="py-16 bg-steel/10">
+      <div class="container mx-auto grid md:grid-cols-3 gap-8">
+        {data.testimonials.map((t: any) => (<TestimonialCard {...t} />))}
+      </div>
+    </section>
+  )}
+  {data?.ctaBand && (
+    <section class="py-16 bg-accent text-offwhite text-center">
+      <div class="container mx-auto">
+        <h2 class="text-heading text-3xl font-bold mb-4">{data.ctaBand.text}</h2>
+        <a href={data.ctaBand.primaryCta.href} class="btn btn-offwhite text-accent text-lg px-8 py-4 font-semibold">{data.ctaBand.primaryCta.label}</a>
+      </div>
+    </section>
+  )}
+  {/* Latest Blog section (optional, only if enabled and posts exist) */}
+  {data?.latestBlog?.enabled && latestPosts.length > 0 && (
+    <section class="py-16 bg-offwhite">
+      <div class="container mx-auto">
+        <h2 class="text-heading text-2xl font-bold mb-8">Najnowsze wpisy</h2>
+        <div class="grid md:grid-cols-3 gap-8">
+          {latestPosts.map(post => (
+            <div class="card card-hover p-6">
+              <img src={post.data.coverImage} alt={post.data.title} class="w-full h-48 object-cover rounded mb-4" />
+              <h3 class="text-xl font-semibold mb-2">{post.data.title}</h3>
+              <p class="text-body text-steel mb-4">{post.data.excerpt}</p>
+              <a href={post.slug ? `/blog/${post.slug}` : '#'} class="btn btn-primary">Czytaj więcej</a>
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
+  )}
   <Footer />
   <script type="application/ld+json">{JSON.stringify(orgJsonLd)}</script>
   <script type="application/ld+json">{JSON.stringify(localBusinessJsonLd)}</script>
