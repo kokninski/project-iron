@@ -4,6 +4,7 @@ import FeaturedBuildCard from '../components/FeaturedBuildCard.astro';
 import Footer from '../components/Footer.astro';
 import Header from '../components/Header.astro';
 import Hero from '../components/Hero.astro';
+import LatestPosts from '../components/LatestPosts.astro';
 import ProcessSteps from '../components/ProcessSteps.astro';
 import TestimonialCard from '../components/TestimonialCard.astro';
 import USPStrip from '../components/USPStrip.astro';
@@ -11,11 +12,12 @@ import BaseLayout from '../layouts/BaseLayout.astro';
 import { buildJsonLd, ogImage } from '../lib/seo';
 
 // Removed duplicate import of CollectionEntry
-import { getCollection, getEntry, type CollectionEntry } from 'astro:content';
+import { getCollection, type CollectionEntry } from 'astro:content';
+import { getHome } from '../lib/content';
 
 
-const home = await getEntry('home', 'index');
-const data = home?.data;
+
+const data = await getHome();
 
 console.log('Home data:', data);
 
@@ -103,7 +105,7 @@ const localBusinessJsonLd = buildJsonLd('LocalBusiness', {
     { icon: '🔒', title: 'Bezpieczeństwo', description: 'Solidność i trwałość.' },
     { icon: '🤝', title: 'Współpraca', description: 'Indywidualne podejście.' },
   ]} />
-  {featured && (
+  {featured ? (
     <section class="py-16">
       <div class="container mx-auto">
         <FeaturedBuildCard
@@ -114,6 +116,13 @@ const localBusinessJsonLd = buildJsonLd('LocalBusiness', {
         />
       </div>
     </section>
+  ) : (
+    import.meta.env.DEV && data?.featuredBuild?.slug && (
+      <div class="text-sm text-red-600 bg-red-50 border border-red-200 rounded p-2 my-4 max-w-xl mx-auto text-center">
+        <strong>Uwaga:</strong> Nie znaleziono wyróżnionej realizacji dla sluga <code>{data.featuredBuild.slug}</code>.<br />
+        Utwórz plik <code>src/content/builds/{data.featuredBuild.slug}.md</code>.
+      </div>
+    )
   )}
   <ProcessSteps steps={processSteps} />
   {Array.isArray(data?.testimonials) && data.testimonials.length > 0 && (
@@ -133,21 +142,7 @@ const localBusinessJsonLd = buildJsonLd('LocalBusiness', {
   )}
   {/* Latest Blog section (optional, only if enabled and posts exist) */}
   {data?.latestBlog?.enabled && latestPosts.length > 0 && (
-    <section class="py-16 bg-offwhite">
-      <div class="container mx-auto">
-        <h2 class="text-heading text-2xl font-bold mb-8">Najnowsze wpisy</h2>
-        <div class="grid md:grid-cols-3 gap-8">
-          {latestPosts.map(post => (
-            <div class="card card-hover p-6">
-              <img src={post.data.coverImage} alt={post.data.title} class="w-full h-48 object-cover rounded mb-4" />
-              <h3 class="text-xl font-semibold mb-2">{post.data.title}</h3>
-              <p class="text-body text-steel mb-4">{post.data.excerpt}</p>
-              <a href={post.slug ? `/blog/${post.slug}` : '#'} class="btn btn-primary">Czytaj więcej</a>
-            </div>
-          ))}
-        </div>
-      </div>
-    </section>
+    <LatestPosts posts={latestPosts} />
   )}
   <Footer />
   <script type="application/ld+json">{JSON.stringify(orgJsonLd)}</script>

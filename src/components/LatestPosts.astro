@@ -1,0 +1,41 @@
+---
+// LatestPosts: receives posts (array of post entries) and renders up to 3 BlogCard cards
+import BlogCard from './BlogCard.astro';
+interface PostEntry {
+  data: {
+    title: string;
+    coverImage: string;
+    excerpt: string;
+    date: string | Date;
+    author: string;
+  };
+  slug: string;
+}
+const { posts = [] } = Astro.props;
+const formatDate = (date: string | Date) => {
+  const d = typeof date === 'string' ? new Date(date) : date;
+  return d.toLocaleDateString('pl-PL', { year: 'numeric', month: 'long', day: 'numeric' });
+};
+---
+
+<section class="py-16 bg-offwhite">
+  <div class="container mx-auto">
+    <h2 class="text-heading text-2xl font-bold mb-8">Najnowsze wpisy</h2>
+    <div class="grid md:grid-cols-3 gap-8">
+      {
+        posts
+          .slice(0, 3)
+          .map(post => (
+            <BlogCard
+              image={post.data.coverImage}
+              title={post.data.title}
+              excerpt={post.data.excerpt}
+              date={formatDate(post.data.date)}
+              author={post.data.author}
+              href={post.slug ? `/blog/${post.slug}` : '#'}
+            />
+          ))
+      }
+    </div>
+  </div>
+</section>
