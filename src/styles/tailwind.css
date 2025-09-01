@@ -19,11 +19,6 @@
     line-height: 1.6;
   }
 
-  /* Dark mode base styles */
-  .dark body {
-    @apply bg-steel text-offwhite;
-  }
-
   /* Font stacks for different content types */
   h1,
   h2,
@@ -59,48 +54,21 @@
     @apply text-base lg:text-lg;
   }
 
-  /* Dark mode base styles */
-  .dark h1,
-  .dark h2,
-  .dark h3,
-  .dark h4,
-  .dark h5,
-  .dark h6 {
-    @apply text-offwhite;
-  }
-
   p,
   span,
   div {
     @apply font-inter;
   }
 
-  .dark p,
-  span,
-  div {
-    @apply text-offwhite;
-  }
-  .dark .list-disc,
-  .dark .list-decimal {
-    @apply text-offwhite;
-  }
-
   a {
     @apply text-accent transition-colors duration-200 hover:text-accent/80;
   }
-  .dark a {
-    @apply text-accent hover:text-accent/70;
-  }
+
   /* Form elements */
   input,
   textarea,
   select {
     @apply border border-steel/20 bg-offwhite font-inter text-charcoal;
-  }
-  .dark input,
-  .dark textarea,
-  .dark select {
-    @apply border-steel/40 bg-steel text-offwhite placeholder:text-steel/50;
   }
 }
 
@@ -111,9 +79,7 @@
     @apply inline-flex items-center justify-center rounded-lg px-4 py-2 font-inter text-sm font-medium transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50;
     min-height: 2.5rem;
   }
-  .dark .btn {
-    @apply border border-steel/40 bg-steel text-offwhite;
-  }
+
   /* Primary button */
   .btn-primary {
     @apply btn bg-accent text-offwhite shadow-sm hover:bg-accent/90 hover:shadow-md focus:ring-accent/50;
@@ -135,9 +101,6 @@
   /* Chip component */
   .chip {
     @apply inline-flex items-center rounded-full border border-steel/20 bg-steel/10 px-3 py-1 font-inter text-xs font-medium text-steel transition-colors duration-200;
-  }
-  .dark .chip {
-    @apply border-steel/40 bg-steel/30 text-offwhite;
   }
 
   /* Chip variants */
@@ -188,18 +151,10 @@
   }
 
   /* Dark mode card styles */
-  .dark .card {
-    @apply border-x-charcoal/40 bg-charcoal text-offwhite;
-  }
 
   .card-hover:hover,
   .card-hover:focus-within {
     @apply border-accent/40 shadow-lg;
-  }
-
-  .dark .card-hover:hover,
-  .dark .card-hover:focus-within {
-    @apply border-accent/60 shadow-accent/30;
   }
 }
 
