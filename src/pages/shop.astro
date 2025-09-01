@@ -1,20 +1,61 @@
 ---
-import BaseLayout from '../layouts/BaseLayout.astro';
+import { getCollection, getEntry } from 'astro:content';
+import FeaturedProducts from '../components/FeaturedProducts.astro';
+import Footer from '../components/Footer.astro';
 import Header from '../components/Header.astro';
 import ProductCard from '../components/ProductCard.astro';
-import Footer from '../components/Footer.astro';
-import { getCollection } from 'astro:content';
+import BaseLayout from '../layouts/BaseLayout.astro';
 
 const products = await getCollection('products');
+
+let featuredData = null;
+try {
+  const fp = await getEntry('featured', 'featured_products');
+  featuredData = fp?.data ?? null;
+} catch {}
+
+let featuredResolved = [];
+if (featuredData?.enabled) {
+  featuredResolved = (featuredData.items ?? [])
+    .map(item => {
+      const product = products.find(p => p.slug === item.slug);
+      if (!product) {
+        if (import.meta.env.DEV) {
+          // eslint-disable-next-line no-console
+          console.warn(`Nie znaleziono produktu o slug: ${item.slug} w kolekcji products.`);
+        }
+        return null;
+      }
+      return {
+        product,
+        badge: item.badge,
+        priceOverridePLN: item.priceOverridePLN,
+        ctaLabel: item.ctaLabel,
+      };
+    })
+    .filter(Boolean);
+}
+
+const featuredSlugs = new Set(featuredResolved.map(i => i.product.slug));
+const productsFiltered = products.filter(p => !featuredSlugs.has(p.slug));
 ---
 
 <BaseLayout>
   <Header />
   <main class="container mx-auto py-16">
     <h1 class="text-heading text-4xl font-bold mb-8">Sklep</h1>
+    {
+      featuredResolved.length > 0 && (
+        <FeaturedProducts
+          title={featuredData.title}
+          subtitle={featuredData.subtitle}
+          items={featuredResolved}
+        />
+      )
+    }
     <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-8 justify-center">
       {
-        products.map((product) => (
+        productsFiltered.map(product => (
           <div class="w-full max-w-xs h-full mx-auto flex">
             <ProductCard
               image={product.data.photo}

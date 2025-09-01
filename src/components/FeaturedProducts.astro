@@ -1,0 +1,92 @@
+---
+export interface FeaturedItem {
+  slug: string;
+  badge?: string;
+  priceOverridePLN?: number;
+  ctaLabel?: string;
+}
+export interface Props {
+  title?: string;
+  subtitle?: string;
+  items: Array<{
+    product: import('astro:content').CollectionEntry<'products'>;
+    badge?: string;
+    priceOverridePLN?: number;
+    ctaLabel?: string;
+  }>;
+}
+
+// Inline formatPLN function to avoid import issues
+function formatPLN(value: number) {
+  return new Intl.NumberFormat('pl-PL', {
+    style: 'currency',
+    currency: 'PLN',
+    maximumFractionDigits: 0,
+  }).format(value);
+}
+console.log(formatPLN(12345)); // Example usage
+
+const { title = 'Polecane produkty', subtitle, items = [] } = Astro.props;
+
+// Pre-render markdown bodies to <Content /> components we can place in the template
+const renderedItems = await Promise.all(
+  items.map(async it => {
+    const rendered = await it.product.render();
+    return { ...it, Content: rendered.Content };
+  })
+);
+---
+
+<section class="w-full py-16 bg-offwhite">
+  <div class="bg-steel/30 p-12 rounded-lg container mx-auto px-4">
+    <h2 class="text-heading text-3xl font-bold mb-2">{title}</h2>
+    {subtitle && <p class="text-body text-lg mb-8 text-steel">{subtitle}</p>}
+
+    <div class="grid gap-8 grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 justify-center">
+      {
+        renderedItems.map(({ product, badge, priceOverridePLN, ctaLabel, Content }) => (
+          <div class="card card-hover flex flex-col h-full p-0 overflow-hidden" tabindex="0">
+            <div class="relative">
+              <img
+                src={product.data.photo}
+                alt={product.data.name}
+                class="w-full h-48 object-cover"
+                loading="lazy"
+              />
+              {badge && (
+                <span class="absolute top-2 left-2 bg-accent text-offwhite text-xs font-semibold px-3 py-1 rounded shadow">
+                  {badge}
+                </span>
+              )}
+            </div>
+
+            <div class="p-6 flex flex-col flex-1">
+              <h3 class="text-heading text-xl font-bold mb-2">{product.data.name}</h3>
+
+              {/* Render markdown safely */}
+              <div class="text-body text-steel text-sm mb-4 line-clamp-3 prose max-w-none">
+                <Content />
+              </div>
+
+              <div class="text-lg font-semibold text-accent mb-4">
+                {formatPLN(
+                  typeof priceOverridePLN === 'number' ? priceOverridePLN : product.data.pricePLN
+                )}
+              </div>
+
+              <a
+                href={product.data.stripeLink}
+                class="btn btn-primary w-full mt-auto focus-ring"
+                aria-label={`Kup produkt: ${product.data.name} za ${formatPLN(typeof priceOverridePLN === 'number' ? priceOverridePLN : product.data.pricePLN)}`}
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                {ctaLabel || 'Kup teraz'}
+              </a>
+            </div>
+          </div>
+        ))
+      }
+    </div>
+  </div>
+</section>

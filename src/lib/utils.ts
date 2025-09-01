@@ -1,6 +1,17 @@
 // Utility functions for Project Iron
 
 /**
+ * Formats a number as PLN currency (no decimals)
+ */
+export function formatPLN(value: number) {
+  return new Intl.NumberFormat('pl-PL', {
+    style: 'currency',
+    currency: 'PLN',
+    maximumFractionDigits: 0,
+  }).format(value);
+}
+
+/**
  * Formats a date as YYYY-MM-DD (ISO 8601)
  */
 export function formatDate(date: Date | string): string {
