@@ -7,7 +7,7 @@ tags:
   - inspiracje
 coverImage: '/images/builds/black-iron2.png'
 excerpt: 'Poznaj historię Marka, który spełnił swoje rowerowe marzenie dzięki indywidualnej realizacji w Project Iron.'
-author: 'Anna Zielińska'
+author: 'Aleksandra Piątkowska'
 ---
 
 Marek od lat marzył o własnym, niepowtarzalnym chopperze. Zgłosił się do nas z inspiracją i kilkoma pomysłami na detale. Wspólnie przeszliśmy przez każdy etap – od projektu, przez dobór materiałów, aż po ręczne wykonanie i testy.

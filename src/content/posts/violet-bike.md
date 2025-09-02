@@ -7,7 +7,7 @@ tags:
   - violet
 coverImage: '/images/builds/violet-bike0.png'
 excerpt: 'Poznaj historię powstania Violet Bike – roweru, który przyciąga wzrok i podkreśla indywidualność właściciela.'
-author: 'Krzysztof Nowak'
+author: 'Jakub Żegleń'
 ---
 
 Violet Bike to projekt dla osób, które nie boją się wyróżniać. Klientka marzyła o rowerze, który będzie nie tylko wygodny, ale i niepowtarzalny wizualnie. Wspólnie wybraliśmy odcień fioletu, który idealnie komponuje się z chromowanymi detalami i nowoczesną sylwetką.

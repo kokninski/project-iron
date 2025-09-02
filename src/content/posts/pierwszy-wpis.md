@@ -5,9 +5,9 @@ tags:
   - proces
   - realizacja
   - inspiracje
-coverImage: '/images/builds/chameleon-bike0.png'
+coverImage: '/images/builds/pink-bike0.png'
 excerpt: 'Poznaj kulisy powstawania naszych unikalnych projektów – od pomysłu do gotowego dzieła.'
-author: 'Krzysztof Nowak'
+author: 'Jakub Żegleń'
 ---
 
 Budowa każdego projektu to fascynująca podróż. W tym wpisie opowiadamy, jak wygląda nasz proces – od pierwszych inspiracji, przez projektowanie, aż po realizację i finalne testy. Każdy etap to współpraca, pasja i dbałość o detale.
