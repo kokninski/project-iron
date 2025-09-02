@@ -77,7 +77,7 @@ const navLinks: NavItem[] = [
   <!-- Mobile menu (disclosure) -->
   <div
     id="mobile-menu"
-    class="md:hidden fixed inset-0 bg-offwhite/95 z-40 flex flex-col items-center justify-center gap-8 opacity-0 pointer-events-none transition-opacity duration-200"
+    class="md:hidden fixed w-full h-fit inset-0 bg-offwhite/90 z-40 flex flex-col items-center justify-center gap-8 opacity-0 pointer-events-none transition-opacity duration-200 mt-5 p-10"
     aria-label="Menu mobilne"
     tabindex="-1"
   >
@@ -130,7 +130,9 @@ const navLinks: NavItem[] = [
       menu.classList.remove('opacity-0', 'pointer-events-none');
       menu.classList.add('opacity-100');
       menu.setAttribute('aria-hidden', 'false');
-      btn.setAttribute('aria-expanded', 'true');
+      btn.classList.add('opacity-0');
+      btn.classList.remove('opacity-100');
+      btn.setAttribute('aria-expanded', 'true', 'opacity-0');
       lastFocused = document.activeElement;
       menu.focus();
     }
@@ -138,6 +140,8 @@ const navLinks: NavItem[] = [
       menu.classList.add('opacity-0', 'pointer-events-none');
       menu.classList.remove('opacity-100');
       menu.setAttribute('aria-hidden', 'true');
+      btn.classList.add('opacity-100');
+      btn.classList.remove('opacity-0');
       btn.setAttribute('aria-expanded', 'false');
       if (lastFocused) lastFocused.focus();
     }
