@@ -25,5 +25,13 @@ export default defineConfig({
         '@': fileURLToPath(new URL('./src', import.meta.url)),
       },
     },
+    server: {
+      host: true, // good default in WSL
+      watch: {
+        usePolling: true, // key for WSL if you ever touch files under /mnt/*
+        interval: 300,
+      },
+      // hmr: { host: 'localhost' }, // usually not needed when you browse on the same machine
+    },
   },
 });
