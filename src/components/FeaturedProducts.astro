@@ -38,11 +38,11 @@ const renderedItems = await Promise.all(
 ---
 
 <section class="w-full py-16 bg-offwhite">
-  <div class="bg-steel/30 p-12 rounded-lg container mx-auto px-4">
+  <div class="bg-steel/30 p-12 rounded-lg container mx-auto px-4 border-accent border-2 shadow-2xl">
     <h2 class="text-heading text-3xl font-bold mb-2">{title}</h2>
     {subtitle && <p class="text-body text-lg mb-8 text-steel">{subtitle}</p>}
 
-    <div class="grid gap-8 grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 justify-center">
+    <div class="grid gap-8 grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-2 justify-center">
       {
         renderedItems.map(({ product, badge, priceOverridePLN, ctaLabel, Content }) => (
           <div class="card card-hover flex flex-col h-full p-0 overflow-hidden" tabindex="0">

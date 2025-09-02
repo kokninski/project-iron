@@ -1,10 +1,6 @@
 ---
-<<<<<<< HEAD
-import { getCollection } from 'astro:content';
-=======
 import { getCollection, getEntry } from 'astro:content';
 import FeaturedProducts from '../components/FeaturedProducts.astro';
->>>>>>> feat-featured-product
 import Footer from '../components/Footer.astro';
 import Header from '../components/Header.astro';
 import ProductCard from '../components/ProductCard.astro';
@@ -48,11 +44,6 @@ const productsFiltered = products.filter(p => !featuredSlugs.has(p.slug));
   <Header />
   <main class="container mx-auto py-16">
     <h1 class="text-heading text-4xl font-bold mb-8">Sklep</h1>
-<<<<<<< HEAD
-    <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-4 gap-8 justify-center">
-      {
-        products.map(product => (
-=======
     {
       featuredResolved.length > 0 && (
         <FeaturedProducts
@@ -62,11 +53,10 @@ const productsFiltered = products.filter(p => !featuredSlugs.has(p.slug));
         />
       )
     }
-    <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-8 justify-center">
+    <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-2 gap-8 justify-center">
       {
         productsFiltered.map(product => (
->>>>>>> feat-featured-product
-          <div class="w-full max-w-xs h-full mx-auto flex">
+          <div class="w-full h-full mx-auto flex">
             <ProductCard
               image={product.data.photo}
               name={product.data.name}
