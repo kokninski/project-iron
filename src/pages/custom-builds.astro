@@ -1,10 +1,22 @@
 ---
-import BaseLayout from '../layouts/BaseLayout.astro';
-import Header from '../components/Header.astro';
+import { getCollection } from 'astro:content';
 import FeaturedBuildCard from '../components/FeaturedBuildCard.astro';
-import ProductCard from '../components/ProductCard.astro';
-import ProcessSteps from '../components/ProcessSteps.astro';
 import Footer from '../components/Footer.astro';
+import Header from '../components/Header.astro';
+import ProcessSteps from '../components/ProcessSteps.astro';
+import ProductCard from '../components/ProductCard.astro';
+import BaseLayout from '../layouts/BaseLayout.astro';
+
+// get featured products
+const products = await getCollection('products');
+
+const zadatekProduct = products.find(p => p.id === 'zadatek.md');
+const konsultacjaProduct = products.find(p => p.id === 'konsultacja.md');
+const featuredProducts = [zadatekProduct, konsultacjaProduct];
+
+// get featured builds
+const builds = await getCollection('builds');
+const featuredBuild = builds.find(b => b.id === 'pink-bike.md');
 ---
 
 <BaseLayout>
@@ -75,18 +87,18 @@ import Footer from '../components/Footer.astro';
     <section class="mb-16">
       <h2 class="text-heading text-2xl font-bold mb-6">Rezerwacja i konsultacje</h2>
       <div class="grid grid-cols-1 sm:grid-cols-2 gap-8 mb-6">
-        <ProductCard
-          image="/images/products/zadatek.jpg"
-          name="Zadatek na realizację"
-          pricePLN={1000}
-          stripeUrl="https://buy.stripe.com/test_zadatek"
-        />
-        <ProductCard
-          image="/images/products/konsultacja.jpg"
-          name="Konsultacja projektowa"
-          pricePLN={200}
-          stripeUrl="https://buy.stripe.com/test_konsultacja"
-        />
+        {
+          featuredProducts.map(product => (
+            <div class="w-full max-w-xs h-full mx-auto flex">
+              <ProductCard
+                image={product.data.photo}
+                name={product.data.name}
+                pricePLN={product.data.pricePLN}
+                stripeUrl={product.data.stripeLink}
+              />
+            </div>
+          ))
+        }
       </div>
       <p class="text-body text-steel">
         Zadatek gwarantuje rezerwację terminu. Konsultacja online to idealny sposób na omówienie
@@ -129,31 +141,15 @@ import Footer from '../components/Footer.astro';
       </div>
     </section>
 
-    <section class="mb-16">
-      <h2 class="text-heading text-2xl font-bold mb-6">Przykładowa realizacja</h2>
-      <FeaturedBuildCard
-        images={[
-          { src: '/images/builds/black-iron-1.jpg' },
-          { src: '/images/builds/black-iron-2.jpg' },
-          { src: '/images/builds/black-iron-3.jpg' },
-          { src: '/images/builds/black-iron-4.jpg' },
-          { src: '/images/builds/black-iron-5.jpg' },
-        ]}
-        title="Black Iron"
-        specs={[
-          { label: 'Stal konstrukcyjna', value: 'S355' },
-          { label: 'Wykończenie', value: 'czarny mat' },
-          { label: 'Wysokość', value: '2,4 m' },
-          { label: 'Szerokość', value: '1,2 m' },
-          { label: 'Waga', value: '180 kg' },
-        ]}
-        testimonial={{
-          quote:
-            'Realizacja przerosła nasze oczekiwania – solidność i estetyka na najwyższym poziomie.',
-          author: 'Anna Zielińska',
-          role: 'Klientka indywidualna',
-        }}
-      />
+    <section class="py-16">
+      <h2 class="text-heading text-2xl font-bold mb-6 text-center">Przykładowa realizacja</h2>
+      <div class="container mx-auto">
+        <FeaturedBuildCard
+          images={featuredBuild.data.photos?.map(src => ({ src })) ?? []}
+          title={featuredBuild.data.name}
+          specs={featuredBuild.data.specs?.map(s => ({ label: s })) ?? []}
+        />
+      </div>
     </section>
   </main>
   <Footer />
