@@ -1,6 +1,6 @@
 ---
 hero:
-  title: 'Ręcznie budowane chujowe rowery z wysoka kierownica'
+  title: 'Ręcznie budowane rowery z wysoką kierownicą'
   subtitle: 'Indywidualne rowery na zamówienie. Poznaj nasz proces, zobacz realizacje i opinie klientów.'
   backgroundImage: '/images/hero-bg.jpg'
   primaryCta:
@@ -22,7 +22,7 @@ testimonials:
     author: 'Ewa Nowicka'
     role: 'Klientka'
     avatarUrl: '/images/avatars/ewa.jpg'
-  - quote: 'Chopper wygląda i jeździ lepiej niż się spodziewałem. Dziękuję!'
+  - quote: 'Rower wygląda i jeździ lepiej niż się spodziewałem. Dziękuję!'
     author: 'Tomasz Zieliński'
     role: 'Klient'
     avatarUrl: '/images/avatars/tomek.jpg'

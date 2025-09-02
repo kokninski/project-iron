@@ -5,4 +5,4 @@ stripeLink: 'https://buy.stripe.com/rower'
 photo: '/images/products/rower.jpg'
 ---
 
-To jest oferta spedazy gotowego roweru, jest zajebisty! I super niewygodny.
+To jest oferta sprzedaży gotowego roweru, jest wspaniały! I wygodny w jeździe.
