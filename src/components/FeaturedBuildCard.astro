@@ -66,8 +66,7 @@ let current = 0;
       }
     </div>
   </div>
-  <script type="module">
-    const images = JSON.parse('{JSON.stringify(images)}');
+  <script type="module" define:vars={{ images }}>
     let current = 0;
     const imgEl = document.getElementById('carousel-image');
     const prevBtn = document.getElementById('carousel-prev');
