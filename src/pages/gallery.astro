@@ -4,6 +4,7 @@ import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
 import GalleryFilterIsland from '../components/GalleryFilterIsland.astro';
 import { getCollection } from 'astro:content';
+
 // Simulate pulling all builds and their photos/tags
 const builds = [
   {
@@ -11,7 +12,7 @@ const builds = [
     photos: [
       { src: '/images/builds/black-iron0.png', tags: ['frames'] },
       { src: '/images/builds/black-iron2.png', tags: ['paint'] },
-      { src: '/images/builds/black-iron3.png', tags: ['frames'] },
+      // { src: '/images/builds/black-iron3.png', tags: ['frames'] },
       // { src: '/images/builds/black-iron-4.jpg', tags: ['frames'] },
       // { src: '/images/builds/black-iron-5.jpg', tags: ['before-after'] },
       { src: '/images/builds/aztec-bike1.png', tags: ['frames', 'paint'] },
