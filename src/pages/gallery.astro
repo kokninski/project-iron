@@ -75,6 +75,7 @@ const allTags = Array.from(new Set(allImages.flatMap(img => img.tags))).sort();
         .gallery-overlay img {
           max-width: 90vw;
           max-height: 80vh;
+          object-fit: contain;
           border-radius: 1rem;
           box-shadow: 0 8px 32px #0008;
         }
