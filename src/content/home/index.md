@@ -1,7 +1,7 @@
 ---
 hero:
-  title: 'Ręcznie budowane chujowe rowery z wysoka kierownica'
-  subtitle: 'Indywidualne rowery na zamówienie. Poznaj nasz proces, zobacz realizacje i opinie klientów.'
+  title: 'Ręcznie budowane choppery z Polski'
+  subtitle: 'Od projektu po ostatni nit — tworzymy motocykle, które żyją na drodze.'
   backgroundImage: '/images/hero-bg.jpg'
   primaryCta:
     label: 'Rozpocznij projekt'
@@ -14,7 +14,7 @@ featuredBuild:
   testimonial: 'To jest bestia!'
   author: 'Michal'
 testimonials:
-  - quote: 'To nie tylko rower, to spełnienie marzeń! Polecam każdemu pasjonatowi.'
+  - quote: 'To nie tylko motocykl, to spełnienie marzeń! Polecam każdemu pasjonatowi.'
     author: 'Marek Kwiatkowski'
     role: 'Klient'
     avatarUrl: '/images/avatars/marek.jpg'
@@ -27,7 +27,7 @@ testimonials:
     role: 'Klient'
     avatarUrl: '/images/avatars/tomek.jpg'
 ctaBand:
-  text: 'Masz pomysł na swój rower? Porozmawiajmy.'
+  text: 'Masz pomysł na swój chopper? Porozmawiajmy.'
   primaryCta:
     label: 'Zapytaj o wycenę'
     href: '/contact'
