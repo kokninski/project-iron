@@ -135,8 +135,8 @@ const localBusinessJsonLd = buildJsonLd('LocalBusiness', {
   {data?.ctaBand && (
     <section class="py-16 bg-accent text-offwhite text-center">
       <div class="container mx-auto">
-        <h2 class="text-heading text-3xl font-bold mb-4">{data.ctaBand.text}</h2>
-        <a href={data.ctaBand.primaryCta.href} class="btn btn-offwhite text-accent text-lg px-8 py-4 font-semibold">{data.ctaBand.primaryCta.label}</a>
+        <h2 class="text-offwhite text-3xl font-bold mb-4 pb-6">{data.ctaBand.text}</h2>
+        <a href={data.ctaBand.primaryCta.href} class="btn bg-steel text-offwhite text-lg px-20 py-4 font-semibold">{data.ctaBand.primaryCta.label}</a>
       </div>
     </section>
   )}
