@@ -1,5 +1,25 @@
 import { defineCollection, z } from 'astro:content';
 
+// Featured products collection
+const featuredProductsSchema = z.object({
+  enabled: z.boolean().default(true),
+  title: z.string().default('Polecane produkty'),
+  subtitle: z.string().optional(),
+  items: z
+    .array(
+      z.object({
+        slug: z.string().min(1), // must match a file slug in products collection
+        badge: z.string().optional(), // e.g. "Nowość", "Bestseller"
+        priceOverridePLN: z.number().optional(),
+        ctaLabel: z.string().optional(), // e.g. "Kup teraz", defaults to product button label
+      }),
+    )
+    .max(8)
+    .default([]),
+});
+
+const featured = defineCollection({ type: 'content', schema: featuredProductsSchema });
+
 // Blog posts collection
 const posts = defineCollection({
   schema: z.object({
@@ -82,4 +102,5 @@ export const collections = {
   builds,
   products,
   home,
+  featured,
 };
