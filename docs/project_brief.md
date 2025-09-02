@@ -100,7 +100,7 @@ author: 'Imię'
 
 ```yaml
 ---
-name: 'Nazwa motocykla'
+name: 'Nazwa roweru'
 year: 2025
 specs:
   - 'Silnik: ...'
@@ -398,7 +398,7 @@ Privacy (RODO), Terms, Returns, Cookies. Template provided below.
 **Hero copy (PL)**
 
 > Nagłówek: _Ręcznie budowane choppery z Polski._
-> Podtytuł: _Od projektu po ostatni nit — tworzymy motocykle, które żyją na drodze._
+> Podtytuł: _Od projektu po ostatni nit — tworzymy rowery, które żyją na drodze._
 > CTA1: **Rozpocznij projekt**
 > CTA2: **Zobacz galerię**
 

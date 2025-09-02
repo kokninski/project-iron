@@ -1,6 +1,6 @@
 ---
 hero:
-  title: 'Ręcznie budowane chujowe rowery z wysoka kierownica'
+  title: 'Ręcznie budowane choppery z Polski'
   subtitle: 'Indywidualne rowery na zamówienie. Poznaj nasz proces, zobacz realizacje i opinie klientów.'
   backgroundImage: '/images/hero-bg.jpg'
   primaryCta:
