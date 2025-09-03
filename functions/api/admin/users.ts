@@ -1,4 +1,4 @@
-import { hashPassword } from '../../lib/auth';
+import { hashPassword } from '../../../lib/auth';
 
 /**
  * Admin user management API
