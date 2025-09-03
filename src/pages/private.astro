@@ -22,12 +22,22 @@ import Footer from '../components/Footer.astro';
               Witaj w ekskluzywnej strefie dla członków Project Iron
             </p>
           </div>
-          <button
-            id="logout-button"
-            class="bg-red-600 text-white px-4 py-2 rounded-md hover:bg-red-700 transition-colors"
-          >
-            Wyloguj się
-          </button>
+          <div class="flex space-x-2">
+            <div id="admin-link" class="hidden">
+              <a 
+                href="/admin/users"
+                class="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700 transition-colors text-sm"
+              >
+                Panel Admin
+              </a>
+            </div>
+            <button
+              id="logout-button"
+              class="bg-red-600 text-white px-4 py-2 rounded-md hover:bg-red-700 transition-colors"
+            >
+              Wyloguj się
+            </button>
+          </div>
         </div>
         
         <div class="grid md:grid-cols-2 gap-8">
@@ -190,6 +200,7 @@ import Footer from '../components/Footer.astro';
     const authCheck = document.getElementById('auth-check');
     const privateContent = document.getElementById('private-content');
     const logoutButton = document.getElementById('logout-button');
+    const adminLink = document.getElementById('admin-link');
     
     // Check if user is logged in
     const authUser = localStorage.getItem('auth_user');
@@ -197,6 +208,16 @@ import Footer from '../components/Footer.astro';
       // Not logged in, redirect to login
       window.location.href = '/login';
       return;
+    }
+    
+    // Parse user data and show admin link if user is admin
+    try {
+      const user = JSON.parse(authUser);
+      if (user.role === 'admin') {
+        adminLink?.classList.remove('hidden');
+      }
+    } catch (error) {
+      console.error('Error parsing user data:', error);
     }
     
     // User is logged in, show content

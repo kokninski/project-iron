@@ -1,23 +1,27 @@
+import { verifyPassword } from '../lib/auth';
+
 /**
- * Simple authentication for demo purposes
- * In production, this would connect to Cloudflare D1 database
+ * Authentication system with Cloudflare D1 database support
+ * Includes fallback to demo users for development
  */
 
-// Demo users - in production these would be in the database
+// Demo users - fallback when no D1 database is available
 const DEMO_USERS = {
   admin: {
     id: 1,
     username: 'admin',
     password: 'admin123',
     email: 'admin@projectiron.pl',
-    role: 'admin'
+    role: 'admin',
+    is_active: true
   },
   member: {
     id: 2,
     username: 'member',
     password: 'member123',
     email: 'member@projectiron.pl',
-    role: 'member'
+    role: 'member',
+    is_active: true
   }
 };
 
@@ -30,7 +34,7 @@ const DEMO_USERS = {
 // @ts-ignore: Cloudflare Pages provides the context type at runtime
 export const onRequestPost = async (context: any) => {
   try {
-    const { request } = context;
+    const { request, env } = context;
     
     const body = await request.json();
     const { username, password } = body;
@@ -38,19 +42,71 @@ export const onRequestPost = async (context: any) => {
     if (!username || !password) {
       return new Response(JSON.stringify({ 
         success: false, 
-        message: 'Username and password are required' 
+        message: 'Nazwa użytkownika i hasło są wymagane' 
       }), {
         status: 400,
         headers: { 'Content-Type': 'application/json' },
       });
     }
 
-    // Check demo credentials
-    const user = DEMO_USERS[username as keyof typeof DEMO_USERS];
-    if (!user || user.password !== password) {
+    let user = null;
+
+    // Try D1 database authentication first
+    if (env.DB) {
+      try {
+        const result = await env.DB.prepare(
+          'SELECT id, username, email, password_hash, role, is_active FROM users WHERE username = ?'
+        ).bind(username).first();
+        
+        if (result) {
+          // Check if user is active
+          if (!result.is_active) {
+            return new Response(JSON.stringify({ 
+              success: false, 
+              message: 'Twoje konto oczekuje na zatwierdzenie przez administratora' 
+            }), {
+              status: 401,
+              headers: { 'Content-Type': 'application/json' },
+            });
+          }
+          
+          // Verify password
+          const isValidPassword = await verifyPassword(password, result.password_hash as string);
+          if (isValidPassword) {
+            user = {
+              id: result.id as number,
+              username: result.username as string,
+              email: result.email as string,
+              role: result.role as string,
+              is_active: result.is_active as boolean
+            };
+          }
+        }
+      } catch (dbError) {
+        console.error('Database authentication error:', dbError);
+        // Fall through to demo authentication
+      }
+    }
+
+    // Fallback to demo users if D1 authentication failed or no database
+    if (!user) {
+      const demoUser = DEMO_USERS[username as keyof typeof DEMO_USERS];
+      if (demoUser && demoUser.password === password && demoUser.is_active) {
+        user = {
+          id: demoUser.id,
+          username: demoUser.username,
+          email: demoUser.email,
+          role: demoUser.role,
+          is_active: demoUser.is_active
+        };
+      }
+    }
+
+    // Check if authentication was successful
+    if (!user) {
       return new Response(JSON.stringify({ 
         success: false, 
-        message: 'Invalid credentials' 
+        message: 'Nieprawidłowe dane logowania' 
       }), {
         status: 401,
         headers: { 'Content-Type': 'application/json' },
@@ -79,7 +135,7 @@ export const onRequestPost = async (context: any) => {
     console.error('Auth login error:', error);
     return new Response(JSON.stringify({ 
       success: false, 
-      message: 'Server error' 
+      message: 'Błąd serwera' 
     }), {
       status: 500,
       headers: { 'Content-Type': 'application/json' },

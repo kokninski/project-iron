@@ -54,10 +54,17 @@ import Footer from '../components/Footer.astro';
         </button>
       </form>
       
-      <div class="mt-6 text-center text-sm text-steel">
-        <p>Testowe konta:</p>
-        <p><strong>admin</strong> / admin123 (administrator)</p>
-        <p><strong>member</strong> / member123 (członek)</p>
+      <div class="mt-6 text-center">
+        <p class="text-sm text-steel mb-4">
+          Nie masz konta? 
+          <a href="/signup" class="text-accent hover:underline font-medium">Złóż wniosek o członkostwo</a>
+        </p>
+        
+        <div class="text-center text-sm text-steel border-t pt-4">
+          <p>Testowe konta:</p>
+          <p><strong>admin</strong> / admin123 (administrator)</p>
+          <p><strong>member</strong> / member123 (członek)</p>
+        </div>
       </div>
     </div>
   </main>
