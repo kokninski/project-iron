@@ -21,6 +21,7 @@
     "prepare": "husky"
   },
   "dependencies": {
+    "@astrojs/cloudflare": "^12.6.7",
     "@fontsource/inter": "^5.2.6",
     "@fontsource/oswald": "^5.2.6",
     "astro": "^5.13.5",

@@ -52,6 +52,13 @@ interface CloudflareEnv {
    * Configure in: Cloudflare Pages → Settings → Environment Variables
    */
   CF_ANALYTICS_TOKEN?: string;
+
+  /**
+   * Cloudflare D1 Database for Authentication
+   * Used for storing user accounts and session data
+   * Automatically bound through wrangler.toml configuration
+   */
+  AUTH_DB: D1Database;
 }
 
 /**

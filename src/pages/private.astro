@@ -1,17 +1,245 @@
 ---
-import Layout from '../layouts/Layout.astro';
-
-// Example: Replace with your actual authentication check
-const isLoggedIn = Astro.cookies.get('auth') === 'true';
-
-if (!isLoggedIn) {
-  return Astro.redirect('/login');
-}
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
 ---
 
-<Layout>
-  <h1>Private Pag
+<BaseLayout seo={{ title: 'Strefa Członków - Project Iron' }}>
+  <Header />
+  <main class="container mx-auto py-16" id="main-content">
+    <div id="auth-check" class="hidden">
+      <div class="text-center py-16">
+        <p class="text-lg text-steel">Sprawdzanie uprawnień...</p>
+      </div>
+    </div>
     
-     e</h1>
-  <p>This page is only available to logged-in users.</p>
-</Layout>
+    <div id="private-content" class="hidden max-w-4xl mx-auto">
+      <div class="bg-white rounded-lg shadow-lg p-8 mb-8">
+        <div class="flex justify-between items-start mb-6">
+          <div>
+            <h1 class="text-heading text-3xl font-bold mb-2">Strefa Członków</h1>
+            <p class="text-body text-steel">
+              Witaj w ekskluzywnej strefie dla członków Project Iron
+            </p>
+          </div>
+          <div class="flex space-x-2">
+            <div id="admin-link" class="hidden">
+              <a 
+                href="/admin/users"
+                class="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700 transition-colors text-sm"
+              >
+                Panel Admin
+              </a>
+            </div>
+            <button
+              id="logout-button"
+              class="bg-red-600 text-white px-4 py-2 rounded-md hover:bg-red-700 transition-colors"
+            >
+              Wyloguj się
+            </button>
+          </div>
+        </div>
+        
+        <div class="grid md:grid-cols-2 gap-8">
+          <!-- Exclusive Content Section -->
+          <div class="space-y-6">
+            <div class="border-l-4 border-accent pl-4">
+              <h2 class="text-xl font-semibold mb-2">Ekskluzywne treści</h2>
+              <p class="text-steel mb-4">
+                Dostęp do specjalnych materiałów, projektów i ofert dostępnych tylko dla członków.
+              </p>
+            </div>
+            
+            <!-- Exclusive Articles -->
+            <div class="bg-gray-50 rounded-lg p-6">
+              <h3 class="text-lg font-semibold mb-3">Najnowsze artykuły dla członków</h3>
+              <ul class="space-y-3">
+                <li class="flex items-start">
+                  <svg class="w-5 h-5 text-accent mt-0.5 mr-3 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+                    <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path>
+                  </svg>
+                  <div>
+                    <h4 class="font-medium">Zaawansowane techniki spawania ram</h4>
+                    <p class="text-sm text-steel">Profesjonalne sekrety budowy trwałych konstrukcji</p>
+                  </div>
+                </li>
+                <li class="flex items-start">
+                  <svg class="w-5 h-5 text-accent mt-0.5 mr-3 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+                    <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path>
+                  </svg>
+                  <div>
+                    <h4 class="font-medium">Dobór komponentów premium</h4>
+                    <p class="text-sm text-steel">Jak wybrać najlepsze części do budowy choppera</p>
+                  </div>
+                </li>
+                <li class="flex items-start">
+                  <svg class="w-5 h-5 text-accent mt-0.5 mr-3 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+                    <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path>
+                  </svg>
+                  <div>
+                    <h4 class="font-medium">Kustomizacja silników</h4>
+                    <p class="text-sm text-steel">Modyfikacje zwiększające wydajność i styl</p>
+                  </div>
+                </li>
+              </ul>
+            </div>
+          </div>
+          
+          <!-- Member Benefits Section -->
+          <div class="space-y-6">
+            <div class="border-l-4 border-accent pl-4">
+              <h2 class="text-xl font-semibold mb-2">Korzyści członkowskie</h2>
+              <p class="text-steel mb-4">
+                Specjalne przywileje i zniżki dostępne wyłącznie dla naszych członków.
+              </p>
+            </div>
+            
+            <!-- Benefits List -->
+            <div class="bg-accent/5 rounded-lg p-6">
+              <h3 class="text-lg font-semibold mb-3">Twoje korzyści</h3>
+              <ul class="space-y-3">
+                <li class="flex items-start">
+                  <svg class="w-5 h-5 text-accent mt-0.5 mr-3 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+                    <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path>
+                  </svg>
+                  <span>15% zniżki na wszystkie usługi</span>
+                </li>
+                <li class="flex items-start">
+                  <svg class="w-5 h-5 text-accent mt-0.5 mr-3 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+                    <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path>
+                  </svg>
+                  <span>Priorytetowe terminy realizacji</span>
+                </li>
+                <li class="flex items-start">
+                  <svg class="w-5 h-5 text-accent mt-0.5 mr-3 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+                    <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path>
+                  </svg>
+                  <span>Bezpłatne konsultacje techniczne</span>
+                </li>
+                <li class="flex items-start">
+                  <svg class="w-5 h-5 text-accent mt-0.5 mr-3 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+                    <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path>
+                  </svg>
+                  <span>Wczesny dostęp do nowych projektów</span>
+                </li>
+                <li class="flex items-start">
+                  <svg class="w-5 h-5 text-accent mt-0.5 mr-3 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+                    <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path>
+                  </svg>
+                  <span>Materiały edukacyjne w PDF</span>
+                </li>
+              </ul>
+            </div>
+            
+            <!-- Contact Form for Members -->
+            <div class="bg-white border border-gray-200 rounded-lg p-6">
+              <h3 class="text-lg font-semibold mb-3">Kontakt dla członków</h3>
+              <p class="text-sm text-steel mb-4">
+                Masz pytanie? Skontaktuj się z nami przez dedykowaną linię dla członków.
+              </p>
+              <a
+                href="mailto:members@projectiron.pl"
+                class="inline-flex items-center bg-accent text-white px-4 py-2 rounded-md hover:bg-accent/90 transition-colors"
+              >
+                <svg class="w-4 h-4 mr-2" fill="currentColor" viewBox="0 0 20 20">
+                  <path d="M2.003 5.884L10 9.882l7.997-3.998A2 2 0 0016 4H4a2 2 0 00-1.997 1.884z"></path>
+                  <path d="M18 8.118l-8 4-8-4V14a2 2 0 002 2h12a2 2 0 002-2V8.118z"></path>
+                </svg>
+                members@projectiron.pl
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <!-- Additional Members-Only Content -->
+      <div class="grid md:grid-cols-3 gap-6">
+        <div class="bg-white rounded-lg shadow-lg p-6">
+          <div class="text-accent mb-3">
+            <svg class="w-8 h-8" fill="currentColor" viewBox="0 0 20 20">
+              <path fill-rule="evenodd" d="M6 2a2 2 0 00-2 2v12a2 2 0 002 2h8a2 2 0 002-2V4a2 2 0 00-2-2H6zm1 2a1 1 0 000 2h6a1 1 0 100-2H7zM7 8a1 1 0 000 2h6a1 1 0 100-2H7zm0 4a1 1 0 100 2h6a1 1 0 100-2H7z" clip-rule="evenodd"></path>
+            </svg>
+          </div>
+          <h3 class="text-lg font-semibold mb-2">Przewodniki budowy</h3>
+          <p class="text-steel text-sm">
+            Szczegółowe instrukcje krok po kroku dla różnych typów chopperów.
+          </p>
+        </div>
+        
+        <div class="bg-white rounded-lg shadow-lg p-6">
+          <div class="text-accent mb-3">
+            <svg class="w-8 h-8" fill="currentColor" viewBox="0 0 20 20">
+              <path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+            </svg>
+          </div>
+          <h3 class="text-lg font-semibold mb-2">Certyfikowane części</h3>
+          <p class="text-steel text-sm">
+            Dostęp do ekskluzywnego katalogu przetestowanych komponentów.
+          </p>
+        </div>
+        
+        <div class="bg-white rounded-lg shadow-lg p-6">
+          <div class="text-accent mb-3">
+            <svg class="w-8 h-8" fill="currentColor" viewBox="0 0 20 20">
+              <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-6-3a2 2 0 11-4 0 2 2 0 014 0zm-2 4a5 5 0 00-4.546 2.916A5.986 5.986 0 0010 16a5.986 5.986 0 004.546-2.084A5 5 0 0010 11z" clip-rule="evenodd"></path>
+            </svg>
+          </div>
+          <h3 class="text-lg font-semibold mb-2">Forum członków</h3>
+          <p class="text-steel text-sm">
+            Dyskusje z innymi pasjonatami i bezpośredni kontakt z mistrzami.
+          </p>
+        </div>
+      </div>
+    </div>
+  </main>
+  <Footer />
+</BaseLayout>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    const authCheck = document.getElementById('auth-check');
+    const privateContent = document.getElementById('private-content');
+    const logoutButton = document.getElementById('logout-button');
+    const adminLink = document.getElementById('admin-link');
+    
+    // Check if user is logged in
+    const authUser = localStorage.getItem('auth_user');
+    if (!authUser) {
+      // Not logged in, redirect to login
+      window.location.href = '/login';
+      return;
+    }
+    
+    // Parse user data and show admin link if user is admin
+    try {
+      const user = JSON.parse(authUser);
+      if (user.role === 'admin') {
+        adminLink?.classList.remove('hidden');
+      }
+    } catch (error) {
+      console.error('Error parsing user data:', error);
+    }
+    
+    // User is logged in, show content
+    authCheck?.classList.add('hidden');
+    privateContent?.classList.remove('hidden');
+    
+    // Handle logout
+    logoutButton?.addEventListener('click', async function() {
+      try {
+        const response = await fetch('/auth', {
+          method: 'DELETE',
+        });
+        
+        // Always clear local storage and redirect
+        localStorage.removeItem('auth_user');
+        window.location.href = '/login';
+      } catch (error) {
+        console.error('Logout error:', error);
+        // Force logout anyway
+        localStorage.removeItem('auth_user');
+        window.location.href = '/login';
+      }
+    });
+  });
+</script>

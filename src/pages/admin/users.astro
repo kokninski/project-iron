@@ -1,0 +1,416 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Header from '../../components/Header.astro';
+import Footer from '../../components/Footer.astro';
+---
+
+<BaseLayout seo={{ title: 'Zarządzanie Użytkownikami - Admin Panel' }}>
+  <Header />
+  <main class="container mx-auto py-16 max-w-6xl" id="main-content">
+    <div id="auth-check" class="text-center py-16">
+      <p class="text-lg text-steel">Sprawdzanie uprawnień administratora...</p>
+    </div>
+    
+    <div id="admin-content" class="hidden">
+      <div class="bg-white rounded-lg shadow-lg p-8 mb-8">
+        <div class="flex justify-between items-start mb-6">
+          <div>
+            <h1 class="text-heading text-3xl font-bold mb-2">Zarządzanie Użytkownikami</h1>
+            <p class="text-body text-steel">
+              Panel administracyjny - zarządzanie kontami użytkowników
+            </p>
+          </div>
+          <div class="flex space-x-4">
+            <a 
+              href="/private"
+              class="bg-steel text-white px-4 py-2 rounded-md hover:bg-charcoal transition-colors"
+            >
+              Powrót do strefy członków
+            </a>
+            <button
+              id="logout-button"
+              class="bg-red-600 text-white px-4 py-2 rounded-md hover:bg-red-700 transition-colors"
+            >
+              Wyloguj się
+            </button>
+          </div>
+        </div>
+
+        <!-- Create New User Section -->
+        <div class="border-b border-gray-200 pb-8 mb-8">
+          <h2 class="text-xl font-semibold mb-4 flex items-center">
+            <svg class="w-5 h-5 mr-2 text-accent" fill="currentColor" viewBox="0 0 20 20">
+              <path fill-rule="evenodd" d="M10 5a1 1 0 011 1v3h3a1 1 0 110 2h-3v3a1 1 0 11-2 0v-3H6a1 1 0 110-2h3V6a1 1 0 011-1z" clip-rule="evenodd"></path>
+            </svg>
+            Utwórz Nowe Konto
+          </h2>
+          
+          <div id="create-user-error" class="hidden bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4">
+          </div>
+          
+          <div id="create-user-success" class="hidden bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded mb-4">
+          </div>
+          
+          <form id="create-user-form" class="grid md:grid-cols-2 gap-6">
+            <div>
+              <label for="new-username" class="block text-sm font-medium text-charcoal mb-1">
+                Nazwa użytkownika *
+              </label>
+              <input
+                id="new-username"
+                name="username"
+                type="text"
+                required
+                minlength="3"
+                class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-accent focus:border-accent"
+                placeholder="Wprowadź nazwę użytkownika"
+              />
+            </div>
+            
+            <div>
+              <label for="new-email" class="block text-sm font-medium text-charcoal mb-1">
+                Adres email *
+              </label>
+              <input
+                id="new-email"
+                name="email"
+                type="email"
+                required
+                class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-accent focus:border-accent"
+                placeholder="Wprowadź adres email"
+              />
+            </div>
+            
+            <div>
+              <label for="new-password" class="block text-sm font-medium text-charcoal mb-1">
+                Hasło *
+              </label>
+              <input
+                id="new-password"
+                name="password"
+                type="password"
+                required
+                minlength="6"
+                class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-accent focus:border-accent"
+                placeholder="Wprowadź hasło"
+              />
+            </div>
+            
+            <div>
+              <label for="new-role" class="block text-sm font-medium text-charcoal mb-1">
+                Rola *
+              </label>
+              <select
+                id="new-role"
+                name="role"
+                required
+                class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-accent focus:border-accent"
+              >
+                <option value="member">Członek</option>
+                <option value="admin">Administrator</option>
+              </select>
+            </div>
+            
+            <div class="md:col-span-2">
+              <button
+                type="submit"
+                class="bg-accent text-white font-medium py-2 px-6 rounded-md hover:bg-accent/90 focus:outline-none focus:ring-2 focus:ring-accent focus:ring-offset-2 transition-colors"
+                id="create-user-button"
+              >
+                Utwórz Konto
+              </button>
+            </div>
+          </form>
+        </div>
+
+        <!-- Users List Section -->
+        <div>
+          <h2 class="text-xl font-semibold mb-4 flex items-center">
+            <svg class="w-5 h-5 mr-2 text-accent" fill="currentColor" viewBox="0 0 20 20">
+              <path d="M9 6a3 3 0 11-6 0 3 3 0 016 0zM17 6a3 3 0 11-6 0 3 3 0 016 0zM12.93 17c.046-.327.07-.66.07-1a6.97 6.97 0 00-1.5-4.33A5 5 0 0119 16v1h-6.07zM6 11a5 5 0 015 5v1H1v-1a5 5 0 015-5z"></path>
+            </svg>
+            Lista Użytkowników
+          </h2>
+          
+          <div id="users-loading" class="text-center py-8">
+            <p class="text-steel">Ładowanie użytkowników...</p>
+          </div>
+          
+          <div id="users-error" class="hidden bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4">
+          </div>
+          
+          <div id="users-container" class="hidden">
+            <div class="bg-gray-50 rounded-lg overflow-hidden">
+              <table class="w-full">
+                <thead class="bg-gray-200">
+                  <tr>
+                    <th class="px-4 py-3 text-left text-sm font-medium text-charcoal">ID</th>
+                    <th class="px-4 py-3 text-left text-sm font-medium text-charcoal">Nazwa użytkownika</th>
+                    <th class="px-4 py-3 text-left text-sm font-medium text-charcoal">Email</th>
+                    <th class="px-4 py-3 text-left text-sm font-medium text-charcoal">Rola</th>
+                    <th class="px-4 py-3 text-left text-sm font-medium text-charcoal">Status</th>
+                    <th class="px-4 py-3 text-left text-sm font-medium text-charcoal">Data utworzenia</th>
+                    <th class="px-4 py-3 text-left text-sm font-medium text-charcoal">Akcje</th>
+                  </tr>
+                </thead>
+                <tbody id="users-table-body">
+                  <!-- Users will be loaded here -->
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+  <Footer />
+</BaseLayout>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    const authCheck = document.getElementById('auth-check');
+    const adminContent = document.getElementById('admin-content');
+    const logoutButton = document.getElementById('logout-button');
+    
+    // Check if user is logged in and has admin role
+    const authUser = localStorage.getItem('auth_user');
+    if (!authUser) {
+      window.location.href = '/login';
+      return;
+    }
+    
+    let user;
+    try {
+      user = JSON.parse(authUser);
+    } catch (error) {
+      localStorage.removeItem('auth_user');
+      window.location.href = '/login';
+      return;
+    }
+    
+    if (user.role !== 'admin') {
+      alert('Brak uprawnień administratora');
+      window.location.href = '/private';
+      return;
+    }
+    
+    // User is admin, show content
+    authCheck?.classList.add('hidden');
+    adminContent?.classList.remove('hidden');
+    
+    // Initialize page functionality
+    initializeCreateUserForm();
+    loadUsers();
+    
+    // Handle logout
+    logoutButton?.addEventListener('click', async function() {
+      try {
+        const response = await fetch('/auth', {
+          method: 'DELETE',
+        });
+        
+        localStorage.removeItem('auth_user');
+        window.location.href = '/login';
+      } catch (error) {
+        console.error('Logout error:', error);
+        localStorage.removeItem('auth_user');
+        window.location.href = '/login';
+      }
+    });
+  });
+  
+  function initializeCreateUserForm() {
+    const form = document.getElementById('create-user-form') as HTMLFormElement;
+    const errorDiv = document.getElementById('create-user-error') as HTMLElement;
+    const successDiv = document.getElementById('create-user-success') as HTMLElement;
+    const submitButton = document.getElementById('create-user-button') as HTMLButtonElement;
+    
+    function showCreateError(message: string) {
+      errorDiv.textContent = message;
+      errorDiv.classList.remove('hidden');
+      successDiv.classList.add('hidden');
+    }
+    
+    function showCreateSuccess(message: string) {
+      successDiv.textContent = message;
+      successDiv.classList.remove('hidden');
+      errorDiv.classList.add('hidden');
+    }
+    
+    function hideCreateMessages() {
+      errorDiv.classList.add('hidden');
+      successDiv.classList.add('hidden');
+    }
+    
+    form.addEventListener('submit', async function(e) {
+      e.preventDefault();
+      
+      hideCreateMessages();
+      const originalText = submitButton.textContent;
+      submitButton.disabled = true;
+      submitButton.textContent = 'Tworzenie...';
+      
+      const formData = new FormData(form);
+      const userData = {
+        username: formData.get('username') as string,
+        email: formData.get('email') as string,
+        password: formData.get('password') as string,
+        role: formData.get('role') as string
+      };
+      
+      try {
+        const response = await fetch('/admin/users', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(userData),
+        });
+        
+        const data = await response.json();
+        
+        if (data.success) {
+          showCreateSuccess(data.message || 'Konto zostało utworzone pomyślnie');
+          form.reset();
+          loadUsers(); // Reload users list
+        } else {
+          showCreateError(data.message || 'Błąd podczas tworzenia konta');
+        }
+      } catch (error) {
+        console.error('Create user error:', error);
+        showCreateError('Błąd połączenia. Spróbuj ponownie.');
+      } finally {
+        submitButton.disabled = false;
+        submitButton.textContent = originalText;
+      }
+    });
+  }
+  
+  async function loadUsers() {
+    const usersLoading = document.getElementById('users-loading');
+    const usersError = document.getElementById('users-error');
+    const usersContainer = document.getElementById('users-container');
+    const usersTableBody = document.getElementById('users-table-body');
+    
+    usersLoading?.classList.remove('hidden');
+    usersError?.classList.add('hidden');
+    usersContainer?.classList.add('hidden');
+    
+    try {
+      const response = await fetch('/admin/users');
+      const data = await response.json();
+      
+      if (data.success) {
+        displayUsers(data.users);
+        usersContainer?.classList.remove('hidden');
+      } else {
+        throw new Error(data.message || 'Failed to load users');
+      }
+    } catch (error) {
+      console.error('Load users error:', error);
+      if (usersError) {
+        usersError.textContent = 'Błąd podczas ładowania użytkowników: ' + (error instanceof Error ? error.message : 'Nieznany błąd');
+        usersError.classList.remove('hidden');
+      }
+    } finally {
+      usersLoading?.classList.add('hidden');
+    }
+  }
+  
+  function displayUsers(users: any[]) {
+    const tableBody = document.getElementById('users-table-body');
+    if (!tableBody) return;
+    
+    tableBody.innerHTML = '';
+    
+    users.forEach(user => {
+      const row = document.createElement('tr');
+      row.className = 'border-b border-gray-200';
+      
+      const statusBadge = user.is_active 
+        ? '<span class="bg-green-100 text-green-800 text-xs font-medium px-2 py-1 rounded">Aktywny</span>'
+        : '<span class="bg-yellow-100 text-yellow-800 text-xs font-medium px-2 py-1 rounded">Oczekuje</span>';
+      
+      const roleBadge = user.role === 'admin' 
+        ? '<span class="bg-red-100 text-red-800 text-xs font-medium px-2 py-1 rounded">Admin</span>'
+        : '<span class="bg-blue-100 text-blue-800 text-xs font-medium px-2 py-1 rounded">Członek</span>';
+      
+      const actionButtons = user.is_active 
+        ? `<button onclick="deactivateUser(${user.id})" class="bg-red-600 text-white text-xs px-2 py-1 rounded hover:bg-red-700">Dezaktywuj</button>`
+        : `<button onclick="activateUser(${user.id})" class="bg-green-600 text-white text-xs px-2 py-1 rounded hover:bg-green-700">Aktywuj</button>`;
+      
+      row.innerHTML = `
+        <td class="px-4 py-3 text-sm">${user.id}</td>
+        <td class="px-4 py-3 text-sm font-medium">${user.username}</td>
+        <td class="px-4 py-3 text-sm">${user.email}</td>
+        <td class="px-4 py-3 text-sm">${roleBadge}</td>
+        <td class="px-4 py-3 text-sm">${statusBadge}</td>
+        <td class="px-4 py-3 text-sm">${new Date(user.created_at).toLocaleDateString('pl-PL')}</td>
+        <td class="px-4 py-3 text-sm">${actionButtons}</td>
+      `;
+      
+      tableBody.appendChild(row);
+    });
+  }
+  
+  // Global functions for user actions
+  (window as any).activateUser = async function(userId: number) {
+    if (!confirm('Czy na pewno chcesz aktywować to konto?')) {
+      return;
+    }
+    
+    try {
+      const response = await fetch('/admin/users', {
+        method: 'PATCH',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ 
+          userId, 
+          action: 'activate' 
+        }),
+      });
+      
+      const data = await response.json();
+      
+      if (data.success) {
+        loadUsers(); // Reload users list
+      } else {
+        alert('Błąd: ' + (data.message || 'Nie udało się aktywować konta'));
+      }
+    } catch (error) {
+      console.error('Activate user error:', error);
+      alert('Błąd połączenia. Spróbuj ponownie.');
+    }
+  };
+  
+  (window as any).deactivateUser = async function(userId: number) {
+    if (!confirm('Czy na pewno chcesz dezaktywować to konto?')) {
+      return;
+    }
+    
+    try {
+      const response = await fetch('/admin/users', {
+        method: 'PATCH',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ 
+          userId, 
+          action: 'deactivate' 
+        }),
+      });
+      
+      const data = await response.json();
+      
+      if (data.success) {
+        loadUsers(); // Reload users list
+      } else {
+        alert('Błąd: ' + (data.message || 'Nie udało się dezaktywować konta'));
+      }
+    } catch (error) {
+      console.error('Deactivate user error:', error);
+      alert('Błąd połączenia. Spróbuj ponownie.');
+    }
+  };
+</script>

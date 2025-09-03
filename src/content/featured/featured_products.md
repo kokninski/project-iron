@@ -1,5 +1,5 @@
 ---
-enabled:
+enabled: true
 title: 'Polecane produkty'
 subtitle: 'Wybrane pozycje — szybka wysyłka i limitowane serie'
 items:

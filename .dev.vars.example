@@ -1,0 +1,17 @@
+# Development Environment Variables for Cloudflare Pages Functions
+# Copy this to .dev.vars for local development
+
+# Cloudflare D1 Database (for production - will be bound automatically)
+# AUTH_DB will be available as env.AUTH_DB in functions
+
+# For local development with wrangler, you would run:
+# npx wrangler d1 create project-iron-auth
+# npx wrangler d1 migrations apply --local project-iron-auth
+# npx wrangler d1 execute project-iron-auth --file=migrations/0001_initial.sql --local
+
+# Existing environment variables for other features
+TURNSTILE_SITE_KEY=1x00000000000000000000AA
+TURNSTILE_SECRET=1x0000000000000000000000000000000AA
+RESEND_API_KEY=re_123456789
+OWNER_EMAIL=hello@projectiron.pl
+CF_ANALYTICS_TOKEN=optional_token
