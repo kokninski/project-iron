@@ -38,6 +38,8 @@ export const onRequestPost = async (context: any) => {
     
     const body = await request.json();
     const { username, password } = body;
+    const turnstileResponse = body['cf-turnstile-response'];
+    const ip = request.headers.get('CF-Connecting-IP') || '';
 
     if (!username || !password) {
       return new Response(JSON.stringify({ 
@@ -47,6 +49,32 @@ export const onRequestPost = async (context: any) => {
         status: 400,
         headers: { 'Content-Type': 'application/json' },
       });
+    }
+
+    // Validate Turnstile if response is provided
+    if (turnstileResponse) {
+      const secret = env.TURNSTILE_SECRET;
+      if (secret) {
+        const verifyRes = await fetch('https://challenges.cloudflare.com/turnstile/v0/siteverify', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+          body: new URLSearchParams({
+            secret,
+            response: turnstileResponse,
+            remoteip: ip,
+          }),
+        });
+        const verifyData = await verifyRes.json();
+        if (!verifyData.success) {
+          return new Response(JSON.stringify({ 
+            success: false, 
+            message: 'Weryfikacja CAPTCHA nie powiodła się.' 
+          }), {
+            status: 400,
+            headers: { 'Content-Type': 'application/json' },
+          });
+        }
+      }
     }
 
     let user = null;
