@@ -229,6 +229,7 @@ import Footer from '../components/Footer.astro';
       try {
         const response = await fetch('/auth', {
           method: 'DELETE',
+          credentials: 'include',
         });
         
         // Always clear local storage and redirect
