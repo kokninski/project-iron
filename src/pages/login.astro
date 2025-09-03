@@ -1,35 +1,131 @@
 ---
-import Layout from '../layouts/Layout.astro';
-
-let error = '';
-if (Astro.request.method === 'POST') {
-  const formData = await Astro.request.formData();
-  const username = formData.get('username');
-  const password = formData.get('password');
-  // Example credentials: user / pass
-  if (username === 'user' && password === 'pass') {
-    Astro.cookies.set('auth', 'true', { path: '/', httpOnly: true });
-    return Astro.redirect('/private');
-  } else {
-    error = 'Invalid credentials';
-  }
-}
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
 ---
 
-<Layout>
-  <h1>Login</h1>
-  {error && <p style="color:red">{error}</p>}
-  <form method="POST">
-    <label>
-      Username:
-      <input name="username" type="text" required />
-    </label>
-    <br />
-    <label>
-      Password:
-      <input name="password" type="password" required />
-    </label>
-    <br />
-    <button type="submit">Login</button>
-  </form>
-</Layout>
+<BaseLayout seo={{ title: 'Logowanie - Strefa Członków' }}>
+  <Header />
+  <main class="container mx-auto py-16 max-w-md">
+    <div class="bg-white rounded-lg shadow-lg p-8">
+      <h1 class="text-heading text-3xl font-bold mb-2 text-center">Logowanie</h1>
+      <p class="text-body text-steel mb-8 text-center">
+        Dostęp do strefy członków
+      </p>
+      
+      <div id="error-message" class="hidden bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4">
+      </div>
+      
+      <form id="login-form" class="space-y-6">
+        <div>
+          <label for="username" class="block text-sm font-medium text-charcoal mb-1">
+            Nazwa użytkownika
+          </label>
+          <input
+            id="username"
+            name="username"
+            type="text"
+            required
+            class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-accent focus:border-accent"
+            placeholder="Wprowadź nazwę użytkownika"
+          />
+        </div>
+        
+        <div>
+          <label for="password" class="block text-sm font-medium text-charcoal mb-1">
+            Hasło
+          </label>
+          <input
+            id="password"
+            name="password"
+            type="password"
+            required
+            class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-accent focus:border-accent"
+            placeholder="Wprowadź hasło"
+          />
+        </div>
+        
+        <button
+          type="submit"
+          class="w-full bg-accent text-white font-medium py-2 px-4 rounded-md hover:bg-accent/90 focus:outline-none focus:ring-2 focus:ring-accent focus:ring-offset-2 transition-colors"
+          id="login-button"
+        >
+          Zaloguj się
+        </button>
+      </form>
+      
+      <div class="mt-6 text-center text-sm text-steel">
+        <p>Testowe konta:</p>
+        <p><strong>admin</strong> / admin123 (administrator)</p>
+        <p><strong>member</strong> / member123 (członek)</p>
+      </div>
+    </div>
+  </main>
+  <Footer />
+</BaseLayout>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    // Check if user is already logged in
+    const isLoggedIn = localStorage.getItem('auth_user');
+    if (isLoggedIn) {
+      window.location.href = '/private';
+      return;
+    }
+
+    const form = document.getElementById('login-form') as HTMLFormElement;
+    const errorDiv = document.getElementById('error-message') as HTMLElement;
+    const loginButton = document.getElementById('login-button') as HTMLButtonElement;
+    
+    function showError(message: string) {
+      errorDiv.textContent = message;
+      errorDiv.classList.remove('hidden');
+    }
+    
+    function hideError() {
+      errorDiv.classList.add('hidden');
+    }
+    
+    function setLoading(isLoading: boolean) {
+      loginButton.disabled = isLoading;
+      loginButton.textContent = isLoading ? 'Logowanie...' : 'Zaloguj się';
+    }
+    
+    form.addEventListener('submit', async function(e) {
+      e.preventDefault();
+      
+      hideError();
+      setLoading(true);
+      
+      const formData = new FormData(form);
+      const username = formData.get('username') as string;
+      const password = formData.get('password') as string;
+      
+      try {
+        const response = await fetch('/auth', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ username, password }),
+        });
+        
+        const data = await response.json();
+        
+        if (data.success) {
+          // Store user data in localStorage for this demo
+          localStorage.setItem('auth_user', JSON.stringify(data.user));
+          // Redirect to private section
+          window.location.href = '/private';
+        } else {
+          showError(data.message || 'Błąd logowania');
+        }
+      } catch (error) {
+        console.error('Login error:', error);
+        showError('Błąd połączenia. Spróbuj ponownie.');
+      } finally {
+        setLoading(false);
+      }
+    });
+  });
+</script>

@@ -4,5 +4,11 @@ compatibility_date = "2025-01-01"
 # - .dev.vars for local development (gitignored)
 # - Cloudflare Pages project settings for production
 
+# Cloudflare D1 Database for user authentication
+[[d1_databases]]
+binding = "AUTH_DB"
+database_name = "project-iron-auth"
+database_id = "placeholder-will-be-replaced-in-production"
+
 [env.production.vars]
 # Production vars will be set in Cloudflare Pages dashboard
