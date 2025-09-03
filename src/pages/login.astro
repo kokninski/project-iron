@@ -2,6 +2,9 @@
 import BaseLayout from '../layouts/BaseLayout.astro';
 import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
+
+// Get Turnstile site key from environment
+const turnstileSiteKey = import.meta.env.PUBLIC_TURNSTILE_SITE_KEY;
 ---
 
 <BaseLayout seo={{ title: 'Logowanie - Strefa Członków' }}>
@@ -45,6 +48,8 @@ import Footer from '../components/Footer.astro';
           />
         </div>
         
+        <div class="cf-turnstile" data-sitekey={turnstileSiteKey}></div>
+        
         <button
           type="submit"
           class="w-full bg-accent text-white font-medium py-2 px-4 rounded-md hover:bg-accent/90 focus:outline-none focus:ring-2 focus:ring-accent focus:ring-offset-2 transition-colors"
@@ -70,6 +75,8 @@ import Footer from '../components/Footer.astro';
   </main>
   <Footer />
 </BaseLayout>
+
+<script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
 
 <script>
   document.addEventListener('DOMContentLoaded', function() {
@@ -108,14 +115,24 @@ import Footer from '../components/Footer.astro';
       const username = formData.get('username') as string;
       const password = formData.get('password') as string;
       
+      // Get Turnstile response
+      const turnstileResponse = (
+        document.querySelector('.cf-turnstile [name="cf-turnstile-response"]') as HTMLInputElement | null
+      )?.value;
+      
       try {
+        const requestBody: any = { username, password };
+        if (turnstileResponse) {
+          requestBody['cf-turnstile-response'] = turnstileResponse;
+        }
+        
         const response = await fetch('/auth', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
           },
           credentials: 'include',
-          body: JSON.stringify({ username, password }),
+          body: JSON.stringify(requestBody),
         });
         
         const data = await response.json();
